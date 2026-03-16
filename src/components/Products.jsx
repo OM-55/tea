@@ -1,12 +1,15 @@
 import React from 'react';
-import { ShoppingBag, Star, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 import Reveal from './Reveal';
 
 const products = [
   {
     id: 1,
     name: "Classic Hibiscus Blend (200 g)",
-    price: "320",
+    price: 320,
+    weight: "200 g",
     description: "Our signature blend of Hibiscus, Lemongrass, and Stevia.",
     images: ["/images/product-front.jpg", "/images/product-back.jpg"],
     rating: 4.9,
@@ -15,7 +18,8 @@ const products = [
   {
     id: 2,
     name: "Classic Hibiscus Blend (1 kg)",
-    price: "1600",
+    price: 1600,
+    weight: "1 kg",
     description: "Our signature blend of Hibiscus, Lemongrass, and Stevia.",
     images: ["/images/product-front.jpg", "/images/product-back.jpg"],
     rating: 5.0,
@@ -26,6 +30,8 @@ const products = [
 const ProductCard = ({ product, index }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const scrollRef = React.useRef(null);
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -33,6 +39,18 @@ const ProductCard = ({ product, index }) => {
       const index = Math.round(scrollLeft / offsetWidth);
       setActiveIndex(index);
     }
+  };
+
+  const handleAddToCart = () => {
+    const item = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      weight: product.weight,
+      image: product.images[0]
+    };
+    addToCart(item);
+    navigate('/cart');
   };
 
   return (
@@ -88,7 +106,10 @@ const ProductCard = ({ product, index }) => {
           <div className="flex items-end gap-3 mb-8">
             <span className="text-3xl font-bold text-foreground">₹{product.price}</span>
           </div>
-          <button className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-bold flex items-center justify-center gap-3 hover:bg-primary/90 transition-all shadow-lg">
+          <button 
+            onClick={handleAddToCart}
+            className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-bold flex items-center justify-center gap-3 hover:bg-primary/90 transition-all shadow-lg"
+          >
             <ShoppingBag className="w-5 h-5" /> Add to Cart
           </button>
         </div>
@@ -110,9 +131,6 @@ const Products = () => {
               Ethically sourced, organic ingredients packed in every tin.
             </p>
           </div>
-          <button className="bg-primary text-primary-foreground px-8 py-3 rounded-full font-bold hover:bg-primary/90 transition-all shadow-lg flex items-center gap-2">
-            Show More <ArrowRight className="w-5 h-5" />
-          </button>
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

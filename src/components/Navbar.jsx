@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { getCartCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +33,7 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <a href="#" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group">
             <div className="bg-white/10 rounded-xl overflow-hidden mix-blend-multiply">
               <img
                 src="/images/logo.png"
@@ -41,7 +44,7 @@ const Navbar = () => {
             <span className="font-display text-primary font-extrabold text-[25px]">
               PushpRas
             </span>
-          </a>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
@@ -53,29 +56,29 @@ const Navbar = () => {
                 {link.name}
               </a>
             ))}
-            <a
-              href="#products"
+            <Link
+              to="/cart"
               className="relative p-2 text-foreground/80 hover:text-primary transition-colors duration-200 group"
               aria-label="Cart"
             >
               <ShoppingBag className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              <span className="absolute top-0 right-0 w-4 h-4 bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center rounded-full">
-                0
+              <span className="absolute top-0 -right-1 w-4 h-4 bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center rounded-full z-10 shadow-sm">
+                {getCartCount()}
               </span>
-            </a>
+            </Link>
           </nav>
 
           <div className="md:hidden flex items-center gap-4">
-            <a
-              href="#products"
+            <Link
+              to="/cart"
               className="relative p-2 text-foreground/80"
               aria-label="Cart"
             >
               <ShoppingBag className="w-5 h-5" />
-              <span className="absolute top-0 right-0 w-4 h-4 bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center rounded-full">
-                0
+              <span className="absolute top-0 -right-1 w-4 h-4 bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center rounded-full z-10 shadow-sm">
+                {getCartCount()}
               </span>
-            </a>
+            </Link>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 text-foreground focus:outline-none"
