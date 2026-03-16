@@ -43,6 +43,7 @@ const Brewing = () => {
           </p>
         </Reveal>
 
+        <div className="relative max-w-5xl mx-auto px-4 z-0">
           {/* Desktop Arrow Connectors */}
           <div className="hidden md:flex absolute top-[32px] left-0 right-0 z-0 justify-around items-center px-[10%]" aria-hidden="true">
             {[1, 2, 3, 4].map((i) => (
