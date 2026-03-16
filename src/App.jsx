@@ -3,10 +3,11 @@ import Navbar from './components/Navbar';
 import SpinWheel from './components/SpinWheel';
 import Hero from './components/Hero';
 import About from './components/About';
+import IngredientsGrid from './components/IngredientsGrid';
 import Ingredients from './components/Ingredients';
-import Products from './components/Products';
 import Wellness from './components/Wellness';
 import Brewing from './components/Brewing';
+import Products from './components/Products';
 import FAQ from './components/FAQ';
 import Blog from './components/Blog';
 import Contact from './components/Contact';
@@ -20,6 +21,7 @@ function App() {
       <main className="flex-grow">
         <Hero />
         <About />
+        <IngredientsGrid />
         <Ingredients />
         <Wellness />
         <Brewing />
