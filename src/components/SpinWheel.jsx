@@ -85,14 +85,12 @@ const SpinWheel = () => {
 
   return (
     <>
-      {/* Floating Button - Adjusted for better clearance */}
+      {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-12 right-10 z-40 bg-primary/95 backdrop-blur-sm text-white px-5 py-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3 font-bold text-xs sm:text-sm border border-white/10"
+        className="fixed bottom-8 right-8 z-40 bg-primary text-white px-3.5 py-2 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center gap-2 font-bold animate-pulse text-xs"
       >
-        <div className="bg-white/20 p-1 rounded-full">
-          <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-        </div>
+        <Gift className="w-4 h-4" />
         <span className="hidden sm:inline">Spin & Win 🎁</span>
       </button>
 
