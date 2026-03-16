@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag, Star } from 'lucide-react';
+import { ShoppingBag, Star, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Reveal from './Reveal';
@@ -51,6 +51,18 @@ const ProductCard = ({ product, index }) => {
     };
     addToCart(item);
     navigate('/cart');
+  };
+
+  const handleBuyNow = () => {
+    const item = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      weight: product.weight,
+      image: product.images[0]
+    };
+    addToCart(item);
+    navigate('/checkout');
   };
 
   return (
@@ -106,12 +118,20 @@ const ProductCard = ({ product, index }) => {
           <div className="flex items-end gap-3 mb-8">
             <span className="text-3xl font-bold text-foreground">₹{product.price}</span>
           </div>
-          <button 
-            onClick={handleAddToCart}
-            className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-bold flex items-center justify-center gap-3 hover:bg-primary/90 transition-all shadow-lg"
-          >
-            <ShoppingBag className="w-5 h-5" /> Add to Cart
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button 
+              onClick={handleAddToCart}
+              className="flex-1 py-4 rounded-2xl border-2 border-primary text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-all"
+            >
+              <ShoppingBag className="w-5 h-5" /> Add to Cart
+            </button>
+            <button 
+              onClick={handleBuyNow}
+              className="flex-1 py-4 rounded-2xl bg-primary text-primary-foreground font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+            >
+              <CreditCard className="w-5 h-5" /> Buy Now
+            </button>
+          </div>
         </div>
       </div>
     </Reveal>

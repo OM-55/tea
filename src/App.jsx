@@ -5,7 +5,6 @@ import SpinWheel from './components/SpinWheel';
 import Hero from './components/Hero';
 import About from './components/About';
 import IngredientsGrid from './components/IngredientsGrid';
-import Ingredients from './components/Ingredients';
 import Wellness from './components/Wellness';
 import Brewing from './components/Brewing';
 import Products from './components/Products';
@@ -14,6 +13,7 @@ import Blog from './components/Blog';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 function App() {
   return (
@@ -29,7 +29,6 @@ function App() {
                   <Hero />
                   <About />
                   <IngredientsGrid />
-                  <Ingredients />
                   <Wellness />
                   <Brewing />
                   <Products />
@@ -39,6 +38,7 @@ function App() {
                 </>
               } />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
             </Routes>
           </main>
           <Footer />
