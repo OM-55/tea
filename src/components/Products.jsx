@@ -1,8 +1,9 @@
-import React from 'react';
-import { ShoppingBag, Star, CreditCard } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShoppingBag, Star, CreditCard, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Reveal from './Reveal';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const products = [
   {
@@ -27,7 +28,25 @@ const products = [
   }
 ];
 
-const ProductCard = ({ product, index }) => {
+const Toast = ({ message, isVisible }) => (
+  <AnimatePresence>
+    {isVisible && (
+      <motion.div
+        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 50, scale: 0.9 }}
+        className="fixed bottom-12 left-1/2 -translate-x-1/2 z-[100] bg-primary text-white px-8 py-3 rounded-full flex items-center gap-3 shadow-2xl shadow-primary/40 border border-white/20 whitespace-nowrap"
+      >
+        <div className="bg-white/20 rounded-full p-1">
+          <Check className="w-4 h-4" />
+        </div>
+        <span className="font-bold tracking-wide">{message}</span>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
+const ProductCard = ({ product, index, onAdd }) => {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const scrollRef = React.useRef(null);
   const { addToCart } = useCart();
@@ -50,7 +69,7 @@ const ProductCard = ({ product, index }) => {
       image: product.images[0]
     };
     addToCart(item);
-    navigate('/cart');
+    onAdd(); // Trigger toast
   };
 
   const handleBuyNow = () => {
@@ -118,16 +137,17 @@ const ProductCard = ({ product, index }) => {
           <div className="flex items-end gap-3 mb-8">
             <span className="text-3xl font-bold text-foreground">₹{product.price}</span>
           </div>
-          <div className="flex flex-col sm:flex-row gap-4">
+
+          <div className="flex flex-col gap-4">
             <button 
               onClick={handleAddToCart}
-              className="flex-1 py-4 rounded-2xl border-2 border-primary text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-all"
+              className="w-full py-4 rounded-full bg-primary text-primary-foreground font-bold flex items-center justify-center gap-3 hover:bg-primary/95 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-primary/20"
             >
               <ShoppingBag className="w-5 h-5" /> Add to Cart
             </button>
             <button 
               onClick={handleBuyNow}
-              className="flex-1 py-4 rounded-2xl bg-primary text-primary-foreground font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+              className="w-full py-3 rounded-full border-2 border-primary/30 text-primary font-bold flex items-center justify-center gap-3 hover:bg-primary/5 hover:border-primary transition-all overflow-hidden"
             >
               <CreditCard className="w-5 h-5" /> Buy Now
             </button>
@@ -139,8 +159,17 @@ const ProductCard = ({ product, index }) => {
 };
 
 const Products = () => {
+  const [showToast, setShowToast] = useState(false);
+
+  const handleShowToast = () => {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   return (
-    <section id="products" className="py-24 bg-card">
+    <section id="products" className="py-24 bg-card relative">
+      <Toast message="Sweet! Added to your cart." isVisible={showToast} />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div className="max-w-2xl">
@@ -155,7 +184,12 @@ const Products = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {products.map((product, index) => (
-            <ProductCard key={product.id} product={product} index={index} />
+            <ProductCard 
+              key={product.id} 
+              product={product} 
+              index={index} 
+              onAdd={handleShowToast}
+            />
           ))}
         </div>
       </div>
