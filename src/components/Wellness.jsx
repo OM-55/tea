@@ -1,22 +1,22 @@
 import React from 'react';
-import { Shield, Zap, Sparkles, Moon, Heart, Wind } from 'lucide-react';
+import { Shield, Zap, Sparkles, Moon, Heart, Wind, Leaf } from 'lucide-react';
 import Reveal from './Reveal';
 
 const benefits = [
   {
     icon: Shield,
-    title: "Supports Immunity",
+    title: "Strong Immunity Booster",
     desc: "Packed with Vitamin C and natural antioxidants to keep your defenses strong."
   },
   {
     icon: Zap,
-    title: "Helps Digestion",
+    title: "Improves Digestion",
     desc: "Lemongrass and cardamom work together to soothe the stomach and aid digestion."
   },
   {
-    icon: Moon,
-    title: "Naturally Caffeine-Free",
-    desc: "Enjoy sustained, jitter-free energy without the afternoon crash."
+    icon: Leaf,
+    title: "Natural, Sugar-Free Sweetness",
+    desc: "Naturally sweetened by Stevia leaves for a delicious, guilt-free flavor profile."
   },
   {
     icon: Heart,
@@ -25,8 +25,13 @@ const benefits = [
   },
   {
     icon: Wind,
-    title: "Reduces Inflammation",
-    desc: "Cloves and active compounds help reduce systemic inflammation."
+    title: "Anti-Inflammatory and Detox",
+    desc: "Cloves and active compounds help reduce systemic inflammation and cleanse."
+  },
+  {
+    icon: Moon,
+    title: "Stress Relief and Relaxation",
+    desc: "Helps calm the mind and promote natural relaxation."
   }
 ];
 
@@ -42,7 +47,7 @@ const Wellness = () => {
             Wellness in <span className="italic font-normal">Every Drop</span>
           </h2>
           <p className="text-lg text-primary-foreground/80">
-            More than just a comforting drink. Our blend is meticulously formulated to nourish your body and calm your mind.
+            This Hibiscus Tea is rich in Vitamin C + antioxidants to boost collagen, brighten skin and fight premature aging.
           </p>
         </Reveal>
 
