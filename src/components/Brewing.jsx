@@ -28,5 +28,3 @@ const Brewing = () => {
 };
 
 export default Brewing;
-
-export default Brewing;
