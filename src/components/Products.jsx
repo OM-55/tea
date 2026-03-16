@@ -8,7 +8,7 @@ const products = [
     name: "Classic Hibiscus Blend (200 g)",
     price: "320",
     description: "Our signature blend of Hibiscus, Lemongrass, and Stevia.",
-    imageUrl: "https://images.unsplash.com/photo-1594631252845-29fc458639a6?w=600&q=80",
+    images: ["/images/product-front.jpg", "/images/product-back.jpg"],
     rating: 4.9,
     reviews: 128
   },
@@ -17,7 +17,7 @@ const products = [
     name: "Classic Hibiscus Blend (1 kg)",
     price: "1600",
     description: "Our signature blend of Hibiscus, Lemongrass, and Stevia.",
-    imageUrl: "https://images.unsplash.com/photo-1576092729250-59c240b79acb?w=600&q=80",
+    images: ["/images/product-front.jpg", "/images/product-back.jpg"],
     rating: 5.0,
     reviews: 86
   }
@@ -45,13 +45,31 @@ const Products = () => {
           {products.map((product, index) => (
             <Reveal key={product.id} delay={index * 0.2}>
               <div className="group flex flex-col md:flex-row bg-background rounded-[40px] overflow-hidden border border-border hover:shadow-2xl transition-all duration-500">
-                <div className="w-full md:w-1/2 aspect-square relative overflow-hidden">
-                  <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute top-6 left-6 bg-accent text-accent-foreground px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                <div className="w-full md:w-1/2 aspect-square relative group/carousel">
+                  {/* Image Carousel */}
+                  <div className="w-full h-full flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+                    {product.images.map((img, i) => (
+                      <div key={i} className="w-full h-full flex-shrink-0 snap-center relative">
+                        <img
+                          src={img}
+                          alt={`${product.name} - View ${i + 1}`}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Carousel Indicators */}
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                    {product.images.map((_, i) => (
+                      <div 
+                        key={i} 
+                        className="w-2 h-2 rounded-full bg-white/50 border border-black/10 transition-all duration-300"
+                      />
+                    ))}
+                  </div>
+
+                  <div className="absolute top-6 left-6 bg-accent text-accent-foreground px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider z-10">
                     Best Seller
                   </div>
                 </div>
