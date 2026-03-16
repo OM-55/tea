@@ -43,22 +43,15 @@ const Brewing = () => {
           </p>
         </Reveal>
 
-        <div className="relative max-w-5xl mx-auto px-4 z-0">
-          <div className="hidden md:block absolute top-[32px] left-0 right-0 z-0 h-20 pointer-events-none" aria-hidden="true">
-            <svg viewBox="0 0 500 40" preserveAspectRatio="none" className="w-full h-full overflow-visible opacity-100">
-              {/* Refined Smooth Wave Path - Darker for visibility */}
-              <path 
-                id="flow-path"
-                d="M 50 20 Q 100 0 150 20 T 250 20 T 350 20 T 450 20" 
-                stroke="#8b8580" 
-                strokeWidth="4" 
-                fill="none" 
-              />
-              {/* Subtle Directional Dots along the path */}
-              {[100, 200, 300, 400].map((pos) => (
-                <circle key={pos} cx={pos} cy={20} r="4" fill="#8b8580" />
-              ))}
-            </svg>
+          {/* Desktop Arrow Connectors */}
+          <div className="hidden md:flex absolute top-[32px] left-0 right-0 z-0 justify-around items-center px-[10%]" aria-hidden="true">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex-1 flex justify-center">
+                <svg width="40" height="20" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-primary opacity-80">
+                  <path d="M0 10H38M38 10L30 4M38 10L30 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            ))}
           </div>
 
           {/* Mobile Vertical Connector */}
