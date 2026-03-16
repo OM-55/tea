@@ -14,34 +14,40 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
+  const isAuthRequired = !localStorage.getItem('userLoggedIn') && !localStorage.getItem('loginSkipped');
+
   return (
     <Router>
       <CartProvider>
         <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
-          <Navbar />
-          <SpinWheel />
+          {!isAuthRequired && <Navbar />}
+          {!isAuthRequired && <SpinWheel />}
           <main className="flex-grow">
             <Routes>
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/" element={
-                <>
-                  <Hero />
-                  <About />
-                  <IngredientsGrid />
-                  <Wellness />
-                  <Brewing />
-                  <Products />
-                  <FAQ />
-                  <Reviews />
-                  <Contact />
-                </>
+                isAuthRequired ? <LoginPage /> : (
+                  <>
+                    <Hero />
+                    <About />
+                    <IngredientsGrid />
+                    <Wellness />
+                    <Brewing />
+                    <Products />
+                    <FAQ />
+                    <Reviews />
+                    <Contact />
+                  </>
+                )
               } />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
             </Routes>
           </main>
-          <Footer />
+          {!isAuthRequired && <Footer />}
         </div>
       </CartProvider>
     </Router>
