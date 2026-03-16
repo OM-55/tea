@@ -44,17 +44,21 @@ const Brewing = () => {
         </Reveal>
 
         <div className="relative max-w-5xl mx-auto px-4">
-          {/* Desktop Curved Connectors */}
+          {/* Desktop Flowchart Connector */}
           <div className="hidden md:block absolute top-[32px] left-0 right-0 -z-10 h-0 pointer-events-none" aria-hidden="true">
             <svg viewBox="0 0 500 40" preserveAspectRatio="none" className="w-full overflow-visible opacity-60">
-              {/* Continuous curved path between 5 steps */}
-              {/* Points approx (based on 5 cols): 50, 150, 250, 350, 450 */}
+              {/* Refined Smooth Wave Path */}
               <path 
-                d="M 50 20 Q 100 0 150 20 Q 200 40 250 20 Q 300 0 350 20 Q 400 40 450 20" 
+                id="flow-path"
+                d="M 50 20 Q 100 0 150 20 T 250 20 T 350 20 T 450 20" 
                 stroke="#d6cfc7" 
                 strokeWidth="2" 
                 fill="none" 
               />
+              {/* Subtle Directional Dots along the path */}
+              {[100, 200, 300, 400].map((pos) => (
+                <circle key={pos} cx={pos} cy={20} r="1.5" fill="#d6cfc7" />
+              ))}
             </svg>
           </div>
 
