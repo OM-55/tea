@@ -67,6 +67,13 @@ const Navbar = () => {
                 {getCartCount()}
               </span>
             </Link>
+
+            <Link
+              to="/login"
+              className="px-6 py-2 bg-primary text-white text-sm font-bold rounded-full hover:bg-primary/90 hover:scale-105 active:scale-95 transition-all shadow-md shadow-primary/20 whitespace-nowrap"
+            >
+              Login
+            </Link>
           </nav>
 
           <div className="md:hidden flex items-center gap-4">
@@ -79,6 +86,12 @@ const Navbar = () => {
               <span className="absolute top-0 -right-1 w-4 h-4 bg-accent text-accent-foreground text-[10px] font-bold flex items-center justify-center rounded-full z-10 shadow-sm">
                 {getCartCount()}
               </span>
+            </Link>
+            <Link
+              to="/login"
+              className="p-2 text-primary font-bold text-sm"
+            >
+              Login
             </Link>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

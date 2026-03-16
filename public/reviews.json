@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Priya S.",
+    "userId": "system_priya",
+    "rating": 5,
+    "text": "This tea is amazing. Very refreshing and calming. Perfect for my evening ritual.",
+    "date": "15/03/2026"
+  },
+  {
+    "id": 2,
+    "name": "Rahul M.",
+    "userId": "system_rahul",
+    "rating": 4,
+    "text": "Great flavor profile! You can really taste the freshness of the lemongrass.",
+    "date": "16/03/2026"
+  },
+  {
+    "id": 3,
+    "name": "Ananya K.",
+    "userId": "system_ananya",
+    "rating": 5,
+    "text": "The Hibiscus Petals add such a beautiful color and tartness. Highly recommend!",
+    "date": "17/03/2026"
+  }
+]

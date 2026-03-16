@@ -1,24 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Star, User, MessageSquare, Send, Trash2 } from 'lucide-react';
+import { Star, User, MessageSquare, Send, Trash2, Pencil } from 'lucide-react';
 import Reveal from './Reveal';
 
 const Reviews = () => {
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      name: "Priya S.",
-      rating: 5,
-      text: "This tea is amazing. Very refreshing and calming. Perfect for my evening ritual.",
-      date: new Date().toLocaleDateString()
-    },
-    {
-      id: 2,
-      name: "Rahul M.",
-      rating: 4,
-      text: "Great flavor profile! You can really taste the freshness of the lemongrass.",
-      date: new Date().toLocaleDateString()
-    }
-  ]);
+  const [reviews, setReviews] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editContent, setEditContent] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -26,36 +13,76 @@ const Reviews = () => {
     text: ''
   });
 
+  const currentUser = sessionStorage.getItem('currentUser');
+
   useEffect(() => {
-    const savedReviews = localStorage.getItem('product_reviews');
-    if (savedReviews) {
-      setReviews(JSON.parse(savedReviews));
-    }
+    const loadReviews = async () => {
+      try {
+        // Fetch shared reviews (seed)
+        const response = await fetch('/reviews.json');
+        const seedReviews = await response.json();
+        
+        // Fetch local reviews (overrides)
+        const savedReviews = localStorage.getItem('product_reviews');
+        const localReviews = savedReviews ? JSON.parse(savedReviews) : [];
+        
+        // Merge: Local reviews replace seed reviews if IDs match, otherwise stack them
+        // In this shared-ready simulation, we use a Map for easy deduplication
+        const reviewMap = new Map();
+        seedReviews.forEach(r => reviewMap.set(r.id, r));
+        localReviews.forEach(r => reviewMap.set(r.id, r));
+        
+        const merged = Array.from(reviewMap.values()).sort((a, b) => b.id - a.id);
+        setReviews(merged);
+      } catch (error) {
+        console.error('Error loading shared reviews:', error);
+        // Fallback to local only if fetch fails
+        const savedReviews = localStorage.getItem('product_reviews');
+        if (savedReviews) setReviews(JSON.parse(savedReviews));
+      }
+    };
+    
+    loadReviews();
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name || !formData.text) return;
 
-    const currentUserId = sessionStorage.getItem('currentUser') || 'guest';
+    const currentUserId = currentUser || 'guest';
 
     const newReview = {
       id: Date.now(),
       ...formData,
-      userId: currentUserId, // Track ownership
+      userId: currentUserId,
       date: new Date().toLocaleDateString()
     };
 
     const updatedReviews = [newReview, ...reviews];
     setReviews(updatedReviews);
-    localStorage.setItem('product_reviews', JSON.stringify(updatedReviews));
+    localStorage.setItem('product_reviews', JSON.stringify(updatedReviews.filter(r => r.userId === currentUserId)));
     setFormData({ name: '', rating: 5, text: '' });
+  };
+
+  const handleUpdate = (id) => {
+    const updatedReviews = reviews.map(r => 
+      r.id === id ? { ...r, text: editContent } : r
+    );
+    setReviews(updatedReviews);
+    
+    // Update local persistence for the owner
+    const localOwned = updatedReviews.filter(r => r.userId === currentUser);
+    localStorage.setItem('product_reviews', JSON.stringify(localOwned));
+    
+    setEditingId(null);
   };
 
   const handleDelete = (id) => {
     const updatedReviews = reviews.filter(r => r.id !== id);
     setReviews(updatedReviews);
-    localStorage.setItem('product_reviews', JSON.stringify(updatedReviews));
+    
+    const localOwned = updatedReviews.filter(r => r.userId === currentUser);
+    localStorage.setItem('product_reviews', JSON.stringify(localOwned));
   };
 
   return (
@@ -82,19 +109,57 @@ const Reviews = () => {
                       />
                     ))}
                   </div>
-                  <p className="text-stone-700 italic mb-6 leading-relaxed">"{review.text}"</p>
-                    <div className="flex-grow flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                          <User className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-stone-900">— {review.name}</h4>
-                          <span className="text-xs text-stone-400">{review.date}</span>
-                        </div>
+                  
+                  {editingId === review.id ? (
+                    <div className="mb-6 space-y-4">
+                      <textarea
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        className="w-full p-4 rounded-xl border border-primary/20 focus:ring-2 focus:ring-primary/10 outline-none transition-all resize-none min-h-[100px]"
+                        autoFocus
+                      />
+                      <div className="flex gap-4">
+                        <button 
+                          onClick={() => handleUpdate(review.id)}
+                          className="px-4 py-2 bg-primary text-white text-xs font-bold rounded-full hover:bg-primary/90 transition-all"
+                        >
+                          Save Changes
+                        </button>
+                        <button 
+                          onClick={() => setEditingId(null)}
+                          className="px-4 py-2 bg-stone-100 text-stone-600 text-xs font-bold rounded-full hover:bg-stone-200 transition-all"
+                        >
+                          Cancel
+                        </button>
                       </div>
+                    </div>
+                  ) : (
+                    <p className="text-stone-700 italic mb-6 leading-relaxed">"{review.text}"</p>
+                  )}
 
-                      {sessionStorage.getItem('currentUser') === review.userId && (
+                  <div className="flex-grow flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <User className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-stone-900">— {review.name}</h4>
+                        <span className="text-xs text-stone-400">{review.date}</span>
+                      </div>
+                    </div>
+
+                    {currentUser === review.userId && !editingId && (
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => {
+                            setEditingId(review.id);
+                            setEditContent(review.text);
+                          }}
+                          className="p-2 text-stone-300 hover:text-primary hover:bg-primary/5 rounded-full transition-all"
+                          title="Edit My Review"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </button>
                         <button 
                           onClick={() => handleDelete(review.id)}
                           className="p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
@@ -102,8 +167,9 @@ const Reviews = () => {
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
-                      )}
-                    </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </Reveal>
             ))}
