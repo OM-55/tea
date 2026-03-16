@@ -150,10 +150,24 @@ const SpinWheel = () => {
                         
                         const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 0 1 ${x2} ${y2} Z`;
                         
-                        // Split text for multi-line: split at last space or specific points
-                        const words = name.split(' ');
-                        const lastWord = words.pop();
-                        const firstLine = words.join(' ');
+                        // Specific break points for all rewards to ensure 2 lines where needed
+                        let firstLine, secondLine;
+                        if (name === "BUY 1 GET 1 FREE") {
+                          firstLine = "BUY 1 GET 1";
+                          secondLine = "FREE";
+                        } else if (name === "BETTER LUCK NEXT TIME") {
+                          firstLine = "BETTER LUCK";
+                          secondLine = "NEXT TIME";
+                        } else if (name === "UP TO 50% OFF") {
+                          firstLine = "UP TO";
+                          secondLine = "50% OFF";
+                        } else if (name === "FREE SAMPLE") {
+                          firstLine = "FREE";
+                          secondLine = "SAMPLE";
+                        } else {
+                          firstLine = name; // e.g. "20% OFF" fits on one line
+                          secondLine = "";
+                        }
                         
                         return (
                           <g key={i}>
@@ -186,13 +200,13 @@ const SpinWheel = () => {
                                 fontFamily: '"Cormorant Garamond", serif' 
                               }}
                             >
-                              {firstLine ? (
+                              {secondLine ? (
                                 <>
-                                  <tspan x="78" dy="-1.2">{firstLine}</tspan>
-                                  <tspan x="78" dy="5.2">{lastWord}</tspan>
+                                  <tspan x="78" dy="-2.2">{firstLine}</tspan>
+                                  <tspan x="78" dy="5.8">{secondLine}</tspan>
                                 </>
                               ) : (
-                                <tspan x="78">{name}</tspan>
+                                <tspan x="78">{firstLine}</tspan>
                               )}
                             </text>
                           </g>
