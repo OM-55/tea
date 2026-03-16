@@ -27,9 +27,9 @@ const SpinWheel = () => {
   
   useEffect(() => {
     const savedReward = localStorage.getItem("spinReward");
-    const spinUsed = localStorage.getItem("spinUsed") === "true";
-    const isAuthDone = localStorage.getItem("userLoggedIn") === "true" || localStorage.getItem("loginSkipped") === "true";
-    const wheelPlayed = localStorage.getItem("wheelPlayed") === "true";
+    const spinUsed = sessionStorage.getItem("spinUsed") === "true";
+    const isAuthDone = sessionStorage.getItem("userLoggedIn") === "true" || sessionStorage.getItem("loginSkipped") === "true";
+    const wheelPlayed = sessionStorage.getItem("wheelPlayed") === "true";
 
     if (savedReward) setReward(savedReward);
     if (spinUsed) setIsUsed(true);
@@ -79,8 +79,8 @@ const SpinWheel = () => {
 
       setReward(finalReward);
       localStorage.setItem("spinReward", finalReward);
-      localStorage.setItem("spinUsed", "true");
-      localStorage.setItem("wheelPlayed", "true");
+      sessionStorage.setItem("spinUsed", "true");
+      sessionStorage.setItem("wheelPlayed", "true");
       
       if (finalReward === "BETTER LUCK NEXT TIME") {
         setMessage("Aww, better luck next time!");
@@ -93,7 +93,7 @@ const SpinWheel = () => {
   const closeModal = () => {
     if (isSpinning) return;
     setIsOpen(false);
-    localStorage.setItem("wheelPlayed", "true");
+    sessionStorage.setItem("wheelPlayed", "true");
   };
 
   return (

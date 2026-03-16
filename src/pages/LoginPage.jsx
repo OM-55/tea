@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import ImageGallery from '../components/Auth/ImageGallery';
 import LoginCard from '../components/Auth/LoginCard';
 
-const LoginPage = () => {
+const LoginPage = ({ onClose }) => {
   const navigate = useNavigate();
   const [isClosing, setIsClosing] = React.useState(false);
 
   const handleAuthSuccess = () => {
     setIsClosing(true);
     setTimeout(() => {
-      localStorage.setItem('userLoggedIn', 'true');
+      sessionStorage.setItem('userLoggedIn', 'true');
+      if (onClose) onClose();
       navigate('/');
     }, 300);
   };
@@ -18,7 +19,8 @@ const LoginPage = () => {
   const handleSkip = () => {
     setIsClosing(true);
     setTimeout(() => {
-      localStorage.setItem('loginSkipped', 'true');
+      sessionStorage.setItem('loginSkipped', 'true');
+      if (onClose) onClose();
       navigate('/');
     }, 300);
   };
