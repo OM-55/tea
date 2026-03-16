@@ -88,7 +88,7 @@ const SpinWheel = () => {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 bg-primary text-white px-4 py-2.5 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center gap-2 font-bold animate-pulse text-sm"
+        className="fixed bottom-8 right-8 z-40 bg-primary text-white px-4 py-3 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center gap-2 font-bold animate-pulse text-sm"
       >
         <Gift className="w-5 h-5" />
         <span className="hidden sm:inline">Spin & Win 🎁</span>
