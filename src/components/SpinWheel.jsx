@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Gift } from 'lucide-react';
 
 const SpinWheel = () => {
@@ -18,11 +18,11 @@ const SpinWheel = () => {
   ];
 
   const colors = [
-    "#476A1D", // primary
-    "#50801D", // secondary
-    "#793747", // accent (ish)
-    "#348681", // muted
-    "#474115", // dark
+    "#FF1B6B", // Vibrant Pink
+    "#45CAFF", // Electric Blue
+    "#FDC830", // Bright Yellow
+    "#00FF87", // Neon Green
+    "#7117EA", // Deep Purple
   ];
 
   useEffect(() => {
@@ -33,7 +33,6 @@ const SpinWheel = () => {
     if (savedReward) setReward(savedReward);
     if (spinUsed) setIsUsed(true);
 
-    // Auto-popup on first visit (only if they haven't spun yet and haven't seen it this session/visit)
     if (!spinUsed && !hasSeenPopup) {
       setTimeout(() => {
         setIsOpen(true);
@@ -48,14 +47,10 @@ const SpinWheel = () => {
     setIsSpinning(true);
     setMessage("");
 
-    // Randomize result
     const randomIndex = Math.floor(Math.random() * segments.length);
     const segmentAngle = 360 / segments.length;
     
-    // Calculate rotation: 5-8 full spins + segment offset
-    // We want the winner to be at the top (270 degrees in SVG coordinate if 0 is right)
-    // Actually, simple way: target angle = (total segments - index) * segmentAngle
-    const extraSpins = (5 + Math.floor(Math.random() * 5)) * 360;
+    const extraSpins = (10 + Math.floor(Math.random() * 5)) * 360;
     const finalRotation = rotation + extraSpins + ((segments.length - randomIndex) * segmentAngle);
     
     setRotation(finalRotation);
@@ -79,7 +74,7 @@ const SpinWheel = () => {
       } else {
         setMessage(`Congratulations! You won: ${finalReward}`);
       }
-    }, 4000); // Match CSS transition duration
+    }, 4000);
   };
 
   const closeModal = () => {
@@ -100,117 +95,130 @@ const SpinWheel = () => {
 
       {/* Modal Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="relative bg-background border-2 border-primary/20 rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl overflow-hidden">
-            {/* Close Button */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="relative flex flex-col items-center max-w-lg w-full">
+            
+            {/* Close Button - Floating */}
             <button
               onClick={closeModal}
               disabled={isSpinning}
-              className="absolute top-6 right-6 p-2 text-muted-foreground hover:text-primary transition-colors disabled:opacity-30"
+              className="absolute -top-12 right-0 p-2 text-white/80 hover:text-white transition-colors disabled:opacity-30 z-50"
             >
-              <X className="w-6 h-6" />
+              <X className="w-8 h-8" />
             </button>
 
-            <div className={`flex flex-col items-center transition-all duration-500 ${isUsed && !isSpinning ? 'opacity-80' : 'opacity-100'}`}>
-              <h2 className="text-3xl font-display font-bold text-primary mb-2 text-center">
-                Luck of the Blend
-              </h2>
-              <p className="text-muted-foreground text-center mb-8">
-                {isUsed 
-                  ? "You've already used your daily spin!" 
-                  : "Spin for a chance to win exclusive discounts and freebies!"}
-              </p>
-
-              {/* Wheel Container */}
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 mb-8">
-                {/* Pointer */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-20">
-                  <div className="w-4 h-8 bg-accent clip-path-triangle rotate-180" 
+            <div className={`relative flex flex-col items-center transition-all duration-500 ${isUsed && !isSpinning ? 'opacity-90' : 'opacity-100'}`}>
+              
+              {/* Wheel Container - The Interactive Part */}
+              <div 
+                className={`relative w-72 h-72 sm:w-96 sm:h-96 mb-12 cursor-pointer transition-transform duration-300 active:scale-95 ${isUsed && !isSpinning ? 'grayscale cursor-not-allowed' : ''}`}
+                onClick={handleSpin}
+              >
+                {/* Pointer - Top centered */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 z-30">
+                  <div className="w-6 h-10 bg-white shadow-lg clip-path-triangle rotate-180" 
                        style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
                 </div>
                 
-                {/* The Wheel */}
+                {/* The Wheel with Double Border */}
                 <div 
-                  className={`w-full h-full rounded-full border-4 border-primary/20 shadow-xl overflow-hidden transition-all duration-[4s] cubic-bezier(0.15, 0, 0.15, 1) ${isUsed && !isSpinning ? 'grayscale opacity-60' : ''}`}
-                  style={{ transform: `rotate(${rotation}deg)` }}
+                  className="w-full h-full rounded-full p-2 bg-slate-900/40 backdrop-blur-sm border-[6px] border-slate-900 shadow-[0_0_40px_rgba(0,0,0,0.5)] relative"
                 >
-                  <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
-                    {segments.map((name, i) => {
-                      const angle = 360 / segments.length;
-                      const startAngle = i * angle;
-                      const endAngle = (i + 1) * angle;
-                      
-                      // Calculate path for wedge
-                      const x1 = 50 + 50 * Math.cos((startAngle * Math.PI) / 180);
-                      const y1 = 50 + 50 * Math.sin((startAngle * Math.PI) / 180);
-                      const x2 = 50 + 50 * Math.cos((endAngle * Math.PI) / 180);
-                      const y2 = 50 + 50 * Math.sin((endAngle * Math.PI) / 180);
-                      
-                      const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 0 1 ${x2} ${y2} Z`;
-                      
-                      return (
-                        <g key={i}>
-                          <path d={pathData} fill={colors[i]} />
-                          <text
-                            x="75"
-                            y="50"
-                            fill="white"
-                            fontSize="4"
-                            fontWeight="bold"
-                            textAnchor="middle"
-                            alignmentBaseline="middle"
-                            transform={`rotate(${startAngle + angle / 2}, 50, 50)`}
-                            className="pointer-events-none uppercase tracking-tighter"
-                            style={{ fontSize: name.length > 10 ? '3px' : '4px' }}
-                          >
-                            {name}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </svg>
-                </div>
+                  <div 
+                    className="w-full h-full rounded-full transition-all duration-[4s] cubic-bezier(0.15, 0, 0.15, 1) relative overflow-hidden ring-4 ring-slate-900"
+                    style={{ transform: `rotate(${rotation}deg)` }}
+                  >
+                    <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                      {segments.map((name, i) => {
+                        const angle = 360 / segments.length;
+                        const startAngle = i * angle;
+                        const endAngle = (i + 1) * angle;
+                        
+                        const x1 = 50 + 50 * Math.cos((startAngle * Math.PI) / 180);
+                        const y1 = 50 + 50 * Math.sin((startAngle * Math.PI) / 180);
+                        const x2 = 50 + 50 * Math.cos((endAngle * Math.PI) / 180);
+                        const y2 = 50 + 50 * Math.sin((endAngle * Math.PI) / 180);
+                        
+                        const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 0 1 ${x2} ${y2} Z`;
+                        
+                        return (
+                          <g key={i}>
+                            <path 
+                              d={pathData} 
+                              fill={colors[i]} 
+                              stroke="rgba(0,0,0,0.3)" 
+                              strokeWidth="0.5"
+                            />
+                            {/* Segment Line - Internal double border look */}
+                            <line 
+                              x1="50" y1="50" x2={x1} y2={y1} 
+                              stroke="rgba(0,0,0,0.4)" 
+                              strokeWidth="1.5" 
+                            />
+                            <text
+                              x="75"
+                              y="50"
+                              fill="white"
+                              fontSize="3.5"
+                              fontWeight="900"
+                              textAnchor="middle"
+                              alignmentBaseline="middle"
+                              transform={`rotate(${startAngle + angle / 2}, 50, 50)`}
+                              className="pointer-events-none uppercase tracking-tighter drop-shadow-md"
+                              style={{ paintOrder: 'stroke', stroke: 'rgba(0,0,0,0.2)', strokeWidth: '0.2px' }}
+                            >
+                              {name}
+                            </text>
+                          </g>
+                        );
+                      })}
+                      {/* Inner Circular Border line */}
+                      <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1" />
+                    </svg>
+                  </div>
 
-                {/* Center Cap */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-12 bg-background border-4 border-primary rounded-full z-10 shadow-inner flex items-center justify-center font-bold text-primary">
-                    GO
+                  {/* Center Cap / GO Button */}
+                  <div className="absolute inset-0 flex items-center justify-center z-20">
+                    <div 
+                      className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-900 rounded-full border-[6px] border-slate-700 shadow-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform group"
+                    >
+                      <span className="font-black text-white text-xl sm:text-2xl group-hover:text-accent transition-colors">GO</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Result Area */}
-              <div className="h-16 flex flex-col items-center justify-center mb-6">
+              {/* Message Banner */}
+              <div className="flex flex-col items-center text-center space-y-4">
                 {message && (
-                  <div className="bg-primary/10 text-primary px-6 py-2 rounded-full font-bold animate-bounce">
+                  <div className="bg-white/10 backdrop-blur-xl border border-white/20 text-white px-8 py-3 rounded-2xl font-black text-xl shadow-2xl animate-bounce">
                     {message}
                   </div>
                 )}
+                
                 {isUsed && !isSpinning && !message && reward && (
-                  <div className="text-secondary font-bold">
-                    Stored Reward: {reward}
+                  <div className="bg-white/5 border border-white/10 text-white/90 px-6 py-2 rounded-xl font-bold">
+                    You won: {reward}
                   </div>
                 )}
-              </div>
 
-              {/* Spin Button */}
-              <button
-                onClick={handleSpin}
-                disabled={isSpinning || isUsed}
-                className={`w-full py-4 rounded-2xl font-bold text-lg transition-all shadow-lg ${
-                  isSpinning || isUsed
-                    ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                    : 'bg-primary text-white hover:bg-primary/90 hover:-translate-y-1 active:scale-95'
-                }`}
-              >
-                {isSpinning ? "SPINNING..." : isUsed ? "SPIN USED" : "SPIN NOW"}
-              </button>
-              
-              {isUsed && (
-                <p className="mt-4 text-xs text-muted-foreground">
-                  The reward will be automatically applied at checkout.
-                </p>
-              )}
+                {isUsed && (
+                  <div className="flex flex-col items-center">
+                    <div className="px-6 py-2 rounded-xl bg-slate-800/50 text-slate-400 font-bold border border-slate-700/50 uppercase text-sm tracking-widest mb-2">
+                      SPIN USED
+                    </div>
+                    <p className="text-white/60 text-sm font-medium">
+                      The reward will be automatically applied at checkout.
+                    </p>
+                  </div>
+                )}
+                
+                {!isUsed && !isSpinning && (
+                  <p className="text-white/80 font-bold text-lg animate-pulse">
+                    Click the wheel to spin!
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
