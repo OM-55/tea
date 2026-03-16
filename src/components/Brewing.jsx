@@ -14,12 +14,12 @@ const Brewing = () => {
           </p>
         </Reveal>
 
-        <Reveal className="max-w-4xl mx-auto overflow-hidden rounded-[40px] shadow-2xl shadow-primary/5 bg-[#fdfaf5] border border-primary/5 flex items-center justify-center p-4 md:p-8">
+        <Reveal className="mx-auto flex items-center justify-center p-0">
           <img 
             src="/images/brewing-guide.png" 
             alt="PushpRas Brewing Guide" 
-            className="max-w-full h-auto object-contain rounded-3xl mx-auto"
-            style={{ filter: 'sepia(10%) contrast(105%) saturate(110%)' }}
+            className="w-[75%] h-auto object-contain mx-auto"
+            style={{ filter: 'contrast(102%) saturate(105%)' }}
           />
         </Reveal>
       </div>

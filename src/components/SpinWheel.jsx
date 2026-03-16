@@ -42,7 +42,7 @@ const SpinWheel = () => {
   }, []);
 
   const handleSpin = () => {
-    if (isUsed || isSpinning) return;
+    if (isSpinning) return;
 
     setIsSpinning(true);
     setMessage("");
@@ -51,8 +51,13 @@ const SpinWheel = () => {
     const segmentAngle = 360 / segments.length;
     
     // Calculate rotation: 10-15 full spins + segment offset
+    // Add segmentAngle/2 to land in the center, plus some random offset to look natural
+    const centerOffset = segmentAngle / 2;
+    const randomFudge = (Math.random() - 0.5) * (segmentAngle * 0.4);
     const extraSpins = (10 + Math.floor(Math.random() * 5)) * 360;
-    const finalRotation = rotation + extraSpins + ((segments.length - randomIndex) * segmentAngle);
+    
+    const targetAngle = ((segments.length - randomIndex) * segmentAngle) + centerOffset + randomFudge;
+    const finalRotation = rotation + extraSpins + targetAngle;
     
     setRotation(finalRotation);
 
@@ -112,7 +117,7 @@ const SpinWheel = () => {
               
               {/* Wheel Container - The Interactive Part */}
               <div 
-                className={`relative w-72 h-72 sm:w-96 sm:h-96 mb-12 cursor-pointer transition-transform duration-300 active:scale-95 ${isUsed && !isSpinning ? 'grayscale cursor-not-allowed' : ''}`}
+                className={`relative w-72 h-72 sm:w-96 sm:h-96 mb-12 cursor-pointer transition-transform duration-300 active:scale-95 ${isSpinning ? 'cursor-not-allowed' : ''}`}
                 onClick={handleSpin}
               >
                 {/* Pointer - Top centered */}
@@ -242,13 +247,13 @@ const SpinWheel = () => {
                   </div>
                 )}
 
-                {isUsed && (
+                {isUsed && !isSpinning && (
                   <div className="flex flex-col items-center">
-                    <div className="px-6 py-2 rounded-xl bg-slate-800/50 text-slate-400 font-bold border border-slate-700/50 uppercase text-sm tracking-widest mb-2">
-                      SPIN USED
-                    </div>
-                    <p className="text-white/60 text-sm font-medium">
-                      The reward will be automatically applied at checkout.
+                    <p className="text-white/60 text-sm font-medium mb-4">
+                      The current reward will be automatically applied at checkout.
+                    </p>
+                    <p className="text-primary font-bold text-sm underline cursor-pointer hover:text-primary/80 transition-colors" onClick={handleSpin}>
+                      Want to try again for a better reward?
                     </p>
                   </div>
                 )}
