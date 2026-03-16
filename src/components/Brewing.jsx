@@ -45,8 +45,8 @@ const Brewing = () => {
 
         <div className="relative max-w-5xl mx-auto px-4">
           {/* Desktop Flowchart Connector */}
-          <div className="hidden md:block absolute top-[32px] left-0 right-0 -z-10 h-0 pointer-events-none" aria-hidden="true">
-            <svg viewBox="0 0 500 40" preserveAspectRatio="none" className="w-full overflow-visible opacity-60">
+          <div className="hidden md:block absolute top-[32px] left-0 right-0 -z-10 h-20 pointer-events-none" aria-hidden="true">
+            <svg viewBox="0 0 500 40" preserveAspectRatio="none" className="w-full h-full overflow-visible opacity-60">
               {/* Refined Smooth Wave Path */}
               <path 
                 id="flow-path"
@@ -57,7 +57,7 @@ const Brewing = () => {
               />
               {/* Subtle Directional Dots along the path */}
               {[100, 200, 300, 400].map((pos) => (
-                <circle key={pos} cx={pos} cy={20} r="1.5" fill="#d6cfc7" />
+                <circle key={pos} cx={pos} cy={20} r="2" fill="#d6cfc7" />
               ))}
             </svg>
           </div>
