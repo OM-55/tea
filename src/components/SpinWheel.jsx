@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { X, Gift } from 'lucide-react';
 
+const segments = [
+  "20% OFF",
+  "UP TO 50% OFF",
+  "BUY 1 GET 1 FREE",
+  "FREE SAMPLE",
+  "BETTER LUCK NEXT TIME"
+];
+
+const colors = [
+  { start: "#FF1B6B", end: "#FF4593" }, // Pink gradient
+  { start: "#45CAFF", end: "#1971FF" }, // Blue gradient
+  { start: "#FDC830", end: "#FB743E" }, // Orange/Yellow gradient
+  { start: "#00FF87", end: "#60EFFF" }, // Mint/Aqua gradient
+  { start: "#7117EA", end: "#EA07FE" }, // Purple gradient
+];
+
 const SpinWheel = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -9,22 +25,6 @@ const SpinWheel = () => {
   const [rotation, setRotation] = useState(0);
   const [message, setMessage] = useState("");
   
-  const segments = [
-    "20% OFF",
-    "UP TO 50% OFF",
-    "BUY 1 GET 1 FREE",
-    "FREE SAMPLE",
-    "BETTER LUCK NEXT TIME"
-  ];
-
-  const colors = [
-    { start: "#FF1B6B", end: "#FF4593" }, // Pink gradient
-    { start: "#45CAFF", end: "#1971FF" }, // Blue gradient
-    { start: "#FDC830", end: "#FB743E" }, // Orange/Yellow gradient
-    { start: "#00FF87", end: "#60EFFF" }, // Mint/Aqua gradient
-    { start: "#7117EA", end: "#EA07FE" }, // Purple gradient
-  ];
-
   useEffect(() => {
     const savedReward = localStorage.getItem("spinReward");
     const spinUsed = localStorage.getItem("spinUsed") === "true";
@@ -47,17 +47,17 @@ const SpinWheel = () => {
     setIsSpinning(true);
     setMessage("");
 
-    const randomIndex = Math.floor(Math.random() * segments.length);
     const segmentAngle = 360 / segments.length;
     
-    // Calculate rotation: 10-15 full spins + segment offset
-    // Add segmentAngle/2 to land in the center, plus some random offset to look natural
+    // Pick a random internal index for the logic
+    const randomIndex = Math.floor(Math.random() * segments.length);
+    
+    // Calculate rotation: 10-15 full spins + center landing
     const centerOffset = segmentAngle / 2;
     const randomFudge = (Math.random() - 0.5) * (segmentAngle * 0.4);
     const extraSpins = (10 + Math.floor(Math.random() * 5)) * 360;
     
-    // The previous targetAngle was correct for clockwise rotation relative to 0deg (top)
-    // We need to ensure segments[randomIndex] represents the segment at the pointer
+    // The target angle needs to bring the desired segment to the top (fixed pointer)
     const targetAngle = ((segments.length - randomIndex) * segmentAngle) + centerOffset + randomFudge;
     const finalRotation = rotation + extraSpins + targetAngle;
     
@@ -67,7 +67,11 @@ const SpinWheel = () => {
       setIsSpinning(false);
       setIsUsed(true);
       
-      let finalReward = segments[randomIndex];
+      // Calculate reward based on final rotation to guarantee match
+      const normalizedRotation = finalRotation % 360;
+      const index = Math.floor((360 - normalizedRotation) / segmentAngle) % segments.length;
+      
+      let finalReward = segments[index];
       if (finalReward === "UP TO 50% OFF") {
         const randomDiscount = Math.floor(Math.random() * 50) + 1;
         finalReward = `${randomDiscount}% OFF`;
@@ -82,7 +86,7 @@ const SpinWheel = () => {
       } else {
         setMessage(`Congratulations! You won: ${finalReward}`);
       }
-    }, 4000);
+    }, 4100); // Slightly longer than CSS transition
   };
 
   const closeModal = () => {
@@ -106,7 +110,6 @@ const SpinWheel = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-[2px] animate-in fade-in duration-300">
           <div className="relative flex flex-col items-center max-w-lg w-full">
             
-            {/* Close Button - Floating with larger hitbox */}
             <button
               onClick={closeModal}
               disabled={isSpinning}
@@ -117,23 +120,21 @@ const SpinWheel = () => {
 
             <div className={`relative flex flex-col items-center transition-all duration-500 ${isUsed && !isSpinning ? 'opacity-90' : 'opacity-100'}`}>
               
-              {/* Wheel Container - The Interactive Part */}
               <div 
-                className={`relative w-72 h-72 sm:w-96 sm:h-96 mb-12 cursor-pointer transition-transform duration-300 active:scale-95 ${isSpinning ? 'cursor-not-allowed' : ''}`}
+                className={`relative w-72 h-72 sm:w-96 sm:h-96 mb-12 cursor-pointer active:scale-95 transition-transform ${isSpinning ? 'cursor-not-allowed' : ''}`}
                 onClick={handleSpin}
               >
-                {/* Pointer - Top centered */}
+                {/* Pointer - Top centered (Fixed) */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 z-30">
-                  <div className="w-6 h-10 bg-white shadow-lg clip-path-triangle rotate-180" 
+                  <div className="w-6 h-10 bg-white shadow-lg rotate-180" 
                        style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
                 </div>
                 
-                {/* The Wheel with Thinner Double Border */}
                 <div 
                   className="w-full h-full rounded-full p-2 bg-slate-900/40 backdrop-blur-sm border-2 border-slate-900 shadow-[0_0_40px_rgba(0,0,0,0.5)] relative"
                 >
                   <div 
-                    className="w-full h-full rounded-full transition-all duration-[4s] cubic-bezier(0.15, 0, 0.15, 1) relative overflow-hidden ring-1 ring-slate-900"
+                    className="w-full h-full rounded-full transition-transform duration-[4000ms] cubic-bezier(0.15, 0, 0.15, 1) relative overflow-hidden ring-1 ring-slate-900"
                     style={{ transform: `rotate(${rotation}deg)` }}
                   >
                     <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
@@ -157,61 +158,31 @@ const SpinWheel = () => {
                         
                         const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 0 1 ${x2} ${y2} Z`;
                         
-                        // Specific break points for all rewards to ensure 2 lines where needed
                         let firstLine, secondLine;
                         if (name === "BUY 1 GET 1 FREE") {
-                          firstLine = "BUY 1 GET 1";
-                          secondLine = "FREE";
+                          firstLine = "BUY 1 GET 1"; secondLine = "FREE";
                         } else if (name === "BETTER LUCK NEXT TIME") {
-                          firstLine = "BETTER LUCK";
-                          secondLine = "NEXT TIME";
+                          firstLine = "BETTER LUCK"; secondLine = "NEXT TIME";
                         } else if (name === "UP TO 50% OFF") {
-                          firstLine = "UP TO";
-                          secondLine = "50% OFF";
+                          firstLine = "UP TO"; secondLine = "50% OFF";
                         } else if (name === "FREE SAMPLE") {
-                          firstLine = "FREE";
-                          secondLine = "SAMPLE";
+                          firstLine = "FREE"; secondLine = "SAMPLE";
                         } else {
-                          firstLine = name; // e.g. "20% OFF" fits on one line
-                          secondLine = "";
+                          firstLine = name; secondLine = "";
                         }
                         
                         return (
                           <g key={i}>
-                            <path 
-                              d={pathData} 
-                              fill={`url(#grad-${i})`}
-                              stroke="rgba(0,0,0,0.3)" 
-                              strokeWidth="0.5"
-                            />
-                            {/* Segment Line - Internal double border look */}
-                            <line 
-                              x1="50" y1="50" x2={x1} y2={y1} 
-                              stroke="rgba(0,0,0,0.4)" 
-                              strokeWidth="0.5" 
-                            />
+                            <path d={pathData} fill={`url(#grad-${i})`} stroke="rgba(0,0,0,0.3)" strokeWidth="0.5" />
+                            <line x1="50" y1="50" x2={x1} y2={y1} stroke="rgba(0,0,0,0.4)" strokeWidth="0.5" />
                             <text
-                              x="78"
-                              y="50"
-                              fill="white"
-                              fontSize="4.8"
-                              fontWeight="900"
-                              textAnchor="middle"
-                              alignmentBaseline="middle"
+                              x="78" y="50" fill="white" fontSize="4.8" fontWeight="900" textAnchor="middle" alignmentBaseline="middle"
                               transform={`rotate(${startAngle + angle / 2}, 50, 50)`}
                               className="pointer-events-none uppercase tracking-tighter drop-shadow-md italic"
-                              style={{ 
-                                paintOrder: 'stroke', 
-                                stroke: 'rgba(0,0,0,0.3)', 
-                                strokeWidth: '0.3px', 
-                                fontFamily: '"Cormorant Garamond", serif' 
-                              }}
+                              style={{ paintOrder: 'stroke', stroke: 'rgba(0,0,0,0.3)', strokeWidth: '0.3px', fontFamily: '"Cormorant Garamond", serif' }}
                             >
                               {secondLine ? (
-                                <>
-                                  <tspan x="78" dy="-2.2">{firstLine}</tspan>
-                                  <tspan x="78" dy="5.8">{secondLine}</tspan>
-                                </>
+                                <><tspan x="78" dy="-2.2">{firstLine}</tspan><tspan x="78" dy="5.8">{secondLine}</tspan></>
                               ) : (
                                 <tspan x="78">{firstLine}</tspan>
                               )}
@@ -219,12 +190,10 @@ const SpinWheel = () => {
                           </g>
                         );
                       })}
-                      {/* Inner Circular Border line */}
                       <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="0.2" />
                     </svg>
                   </div>
 
-                  {/* Center Cap / GO Button */}
                   <div className="absolute inset-0 flex items-center justify-center z-20">
                     <div 
                       className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-900 rounded-full border-2 border-slate-700 shadow-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform group"
@@ -235,7 +204,6 @@ const SpinWheel = () => {
                 </div>
               </div>
 
-              {/* Message Banner */}
               <div className="flex flex-col items-center text-center space-y-4">
                 {message && (
                   <div className="bg-white/10 backdrop-blur-xl border border-white/20 text-white px-8 py-3 rounded-2xl font-black text-xl shadow-2xl animate-bounce">
