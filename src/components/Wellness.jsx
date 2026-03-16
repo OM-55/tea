@@ -14,11 +14,6 @@ const benefits = [
     desc: "Lemongrass and cardamom work together to soothe the stomach and aid digestion."
   },
   {
-    icon: Sparkles,
-    title: "Rich in Antioxidants",
-    desc: "Neutralizes free radicals to promote cellular health and a radiant glow."
-  },
-  {
     icon: Moon,
     title: "Naturally Caffeine-Free",
     desc: "Enjoy sustained, jitter-free energy without the afternoon crash."

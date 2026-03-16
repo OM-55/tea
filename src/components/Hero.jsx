@@ -69,15 +69,6 @@ const Hero = () => {
                   </span>
                 </div>
               </div>
-              <div
-                className="absolute -bottom-6 -left-6 sm:-left-10 bg-card p-6 rounded-2xl shadow-xl shadow-black/5 max-w-[200px] border border-border/50 animate-bounce"
-                style={{ animationDuration: '3s' }}
-              >
-                <div className="text-3xl mb-2">🌿</div>
-                <h4 className="font-display font-bold text-lg leading-tight">
-                  Rich in Antioxidants
-                </h4>
-              </div>
             </Reveal>
           </div>
         </div>

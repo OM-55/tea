@@ -5,7 +5,7 @@ const ingredients = [
   {
     emoji: "🌺", // Hibiscus Leaves
     name: "Hibiscus Leaves",
-    benefits: ["Rich in antioxidants", "Helps control blood pressure", "Refreshing tangy flavor"],
+    benefits: ["Helps control blood pressure", "Refreshing tangy flavor"],
     color: "bg-primary/10 text-primary"
   },
   {
