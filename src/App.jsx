@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from './components/Navbar';
+import SpinWheel from './components/SpinWheel';
 import Hero from './components/Hero';
 import About from './components/About';
 import Ingredients from './components/Ingredients';
@@ -15,6 +16,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
       <Navbar />
+      <SpinWheel />
       <main className="flex-grow">
         <Hero />
         <About />
