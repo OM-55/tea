@@ -132,21 +132,57 @@ const CheckoutPage = () => {
                 </div>
 
                 {paymentMethod === 'upi' && (
-                  <Reveal className="p-6 bg-stone-50 rounded-2xl border border-stone-200 space-y-4">
-                    <div className="flex items-center gap-3 text-stone-700 font-medium">
-                      <Wallet className="w-5 h-5 text-primary" />
-                      <span>Send payment to UPI ID: <span className="font-bold select-all">pushpras@upi</span></span>
-                    </div>
+                  <Reveal className="p-8 bg-stone-50 rounded-3xl border border-stone-200 space-y-8">
                     <div>
-                      <label className="block text-sm font-medium text-stone-600 mb-1">Transaction ID</label>
-                      <input 
-                        required 
-                        value={transactionId}
-                        onChange={(e) => setTransactionId(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" 
-                        type="text" 
-                        placeholder="Enter the 12-digit transaction ID" 
-                      />
+                      <h3 className="text-lg font-bold text-stone-800 mb-6 flex items-center gap-2">
+                        <Wallet className="w-5 h-5 text-primary" />
+                        Select your UPI App
+                      </h3>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        {[
+                          { id: 'gpay', name: 'Google Pay', color: '#4285F4' },
+                          { id: 'phonepe', name: 'PhonePe', color: '#5f259f' },
+                          { id: 'paytm', name: 'Paytm', color: '#00BAF2' },
+                          { id: 'bhim', name: 'BHIM', color: '#e51a24' }
+                        ].map((app) => (
+                          <button
+                            key={app.id}
+                            type="button"
+                            onClick={() => setTransactionId('')} // Reset for demo
+                            className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white border border-stone-200 hover:border-primary hover:bg-primary/5 transition-all group"
+                          >
+                            <div 
+                              className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-black text-xs shadow-sm group-hover:scale-110 transition-transform"
+                              style={{ backgroundColor: app.color }}
+                            >
+                              {app.id.toUpperCase().slice(0, 2)}
+                            </div>
+                            <span className="text-xs font-bold text-stone-600">{app.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-6 border-t border-stone-200">
+                      <div className="bg-white p-6 rounded-2xl border border-stone-100 mb-6 flex flex-col items-center text-center">
+                        <p className="text-xs text-stone-500 uppercase tracking-widest font-bold mb-2">Send Payment To</p>
+                        <p className="text-2xl font-display font-bold text-stone-800 tracking-tight">pushpras@upi</p>
+                        <p className="text-[10px] text-stone-400 mt-2">Open your selected app and enter the ID above</p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-stone-600">Enter Transaction ID (12 Digits)</label>
+                        <input 
+                          required 
+                          maxLength={12}
+                          value={transactionId}
+                          onChange={(e) => setTransactionId(e.target.value.replace(/\D/g, ''))}
+                          className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-mono tracking-widest" 
+                          type="text" 
+                          placeholder="0000 0000 0000" 
+                        />
+                        <p className="text-[10px] text-stone-400 italic">Check your UPI app's transaction history for the ID</p>
+                      </div>
                     </div>
                   </Reveal>
                 )}

@@ -56,6 +56,8 @@ const SpinWheel = () => {
     const randomFudge = (Math.random() - 0.5) * (segmentAngle * 0.4);
     const extraSpins = (10 + Math.floor(Math.random() * 5)) * 360;
     
+    // The previous targetAngle was correct for clockwise rotation relative to 0deg (top)
+    // We need to ensure segments[randomIndex] represents the segment at the pointer
     const targetAngle = ((segments.length - randomIndex) * segmentAngle) + centerOffset + randomFudge;
     const finalRotation = rotation + extraSpins + targetAngle;
     
