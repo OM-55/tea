@@ -95,16 +95,16 @@ const SpinWheel = () => {
 
       {/* Modal Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-[2px] animate-in fade-in duration-300">
           <div className="relative flex flex-col items-center max-w-lg w-full">
             
-            {/* Close Button - Floating */}
+            {/* Close Button - Floating with larger hitbox */}
             <button
               onClick={closeModal}
               disabled={isSpinning}
-              className="absolute -top-12 right-0 p-2 text-white/80 hover:text-white transition-colors disabled:opacity-30 z-50"
+              className="absolute -top-16 -right-4 w-16 h-16 flex items-center justify-center text-white/80 hover:text-white transition-colors disabled:opacity-30 z-50 bg-white/10 hover:bg-white/20 rounded-full"
             >
-              <X className="w-8 h-8" />
+              <X className="w-10 h-10" />
             </button>
 
             <div className={`relative flex flex-col items-center transition-all duration-500 ${isUsed && !isSpinning ? 'opacity-90' : 'opacity-100'}`}>
@@ -159,13 +159,13 @@ const SpinWheel = () => {
                               x="75"
                               y="50"
                               fill="white"
-                              fontSize="3.5"
+                              fontSize="5"
                               fontWeight="900"
                               textAnchor="middle"
                               alignmentBaseline="middle"
                               transform={`rotate(${startAngle + angle / 2}, 50, 50)`}
-                              className="pointer-events-none uppercase tracking-tighter drop-shadow-md"
-                              style={{ paintOrder: 'stroke', stroke: 'rgba(0,0,0,0.2)', strokeWidth: '0.2px' }}
+                              className="pointer-events-none uppercase tracking-tighter drop-shadow-md italic"
+                              style={{ paintOrder: 'stroke', stroke: 'rgba(0,0,0,0.2)', strokeWidth: '0.2px', fontFamily: '"Cormorant Garamond", serif' }}
                             >
                               {name}
                             </text>

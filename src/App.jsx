@@ -21,9 +21,9 @@ function App() {
         <Hero />
         <About />
         <Ingredients />
-        <Products />
         <Wellness />
         <Brewing />
+        <Products />
         <FAQ />
         <Blog />
         <Contact />
