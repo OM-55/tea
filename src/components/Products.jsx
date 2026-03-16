@@ -11,7 +11,7 @@ const products = [
     name: "Classic Hibiscus Blend (200 g)",
     price: 320,
     weight: "200 g",
-    description: "Our signature blend of Hibiscus, Lemongrass, and Stevia.",
+    description: "Our signature blend of Hibiscus, Lemongrass, Cardamom, and Stevia.",
     images: ["/images/product-front.jpg", "/images/product-back.jpg"],
     rating: 4.9,
     reviews: 128
@@ -21,7 +21,7 @@ const products = [
     name: "Classic Hibiscus Blend (1 kg)",
     price: 1600,
     weight: "1 kg",
-    description: "Our signature blend of Hibiscus, Lemongrass, and Stevia.",
+    description: "Our signature blend of Hibiscus, Lemongrass, Cardamom, and Stevia.",
     images: ["/images/product-front.jpg", "/images/product-back.jpg"],
     rating: 5.0,
     reviews: 86

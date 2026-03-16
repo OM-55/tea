@@ -22,7 +22,6 @@ const Navbar = () => {
     { name: 'Benefits', href: '/#benefits' },
     { name: 'Brewing', href: '/#brewing' },
     { name: 'Buy Tea', href: '/#products' },
-    { name: 'Blog', href: '/#blog' },
     { name: 'Contact', href: '/#contact' },
   ];
 

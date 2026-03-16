@@ -9,7 +9,7 @@ import Wellness from './components/Wellness';
 import Brewing from './components/Brewing';
 import Products from './components/Products';
 import FAQ from './components/FAQ';
-import Blog from './components/Blog';
+import Reviews from './components/Reviews';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CartPage from './pages/CartPage';
@@ -33,7 +33,7 @@ function App() {
                   <Brewing />
                   <Products />
                   <FAQ />
-                  <Blog />
+                  <Reviews />
                   <Contact />
                 </>
               } />
