@@ -36,7 +36,7 @@ const ingredients = [
 
 const Ingredients = () => {
   return (
-    <section id="ingredients" className="py-24 relative overflow-hidden">
+    <section id="ingredients-details" className="py-24 relative overflow-hidden">
       <div className="absolute top-1/2 left-0 w-full h-[800px] -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,var(--color-primary)_0%,transparent_70%)] opacity-[0.03] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal className="text-center max-w-3xl mx-auto mb-16">

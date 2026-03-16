@@ -5,9 +5,8 @@ import Reveal from './Reveal';
 const products = [
   {
     id: 1,
-    name: "Classic Hibiscus Blend",
-    price: "499",
-    oldPrice: "599",
+    name: "Classic Hibiscus Blend (200 g)",
+    price: "320",
     description: "Our signature blend of Hibiscus, Lemongrass, and Stevia.",
     imageUrl: "https://images.unsplash.com/photo-1594631252845-29fc458639a6?w=600&q=80",
     rating: 4.9,
@@ -15,10 +14,9 @@ const products = [
   },
   {
     id: 2,
-    name: "Wellness Tea Set",
-    price: "1299",
-    oldPrice: "1499",
-    description: "Premium selection of 3 herbal blends for holistic health.",
+    name: "Classic Hibiscus Blend (1 kg)",
+    price: "1600",
+    description: "Our signature blend of Hibiscus, Lemongrass, and Stevia.",
     imageUrl: "https://images.unsplash.com/photo-1576092729250-59c240b79acb?w=600&q=80",
     rating: 5.0,
     reviews: 86
@@ -72,7 +70,6 @@ const Products = () => {
                   </p>
                   <div className="flex items-end gap-3 mb-8">
                     <span className="text-3xl font-bold text-foreground">₹{product.price}</span>
-                    <span className="text-lg text-muted-foreground line-through">₹{product.oldPrice}</span>
                   </div>
                   <button className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-bold flex items-center justify-center gap-3 hover:bg-primary/90 transition-all shadow-lg">
                     <ShoppingBag className="w-5 h-5" /> Add to Cart
