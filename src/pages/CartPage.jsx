@@ -5,9 +5,9 @@ import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from 'lucide-react';
 import Reveal from '../components/Reveal';
 
 const CartPage = () => {
-  const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { cart, removeFromCart, updateQuantity, getCartTotal, getDiscountDetails } = useCart();
   const subtotal = getCartTotal();
-  const discount = 0; // Can be linked to Spin & Win later
+  const { amount: discount, label: discountLabel, message: discountMessage, rewardType } = getDiscountDetails();
   const total = subtotal - discount;
 
   if (cart.length === 0) {
@@ -42,7 +42,9 @@ const CartPage = () => {
           {/* Cart Items List */}
           <div className="lg:col-span-2 space-y-8">
             {cart.map((item) => (
+              // ... existing mapping ...
               <Reveal key={item.id}>
+                {/* ... existing item div ... */}
                 <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-stone-50 rounded-3xl border border-stone-100">
                   <div className="w-24 h-24 bg-white rounded-2xl overflow-hidden flex-shrink-0 shadow-sm">
                     <img 
@@ -88,23 +90,52 @@ const CartPage = () => {
                 </div>
               </Reveal>
             ))}
+
+            {rewardType === 'FREE SAMPLE' && (
+              <Reveal>
+                <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-primary/5 rounded-3xl border border-primary/20 border-dashed">
+                  <div className="w-24 h-24 bg-white rounded-2xl overflow-hidden flex-shrink-0 shadow-sm flex items-center justify-center">
+                    <ShoppingBag className="w-10 h-10 text-primary opacity-40" />
+                  </div>
+                  <div className="flex-grow text-center sm:text-left">
+                    <div className="inline-block px-2 py-1 bg-primary text-white text-[10px] font-black rounded-md mb-2 uppercase tracking-tighter">FREE REWARD</div>
+                    <h3 className="text-lg font-bold text-stone-800 mb-1">Hibiscus Tea Sample</h3>
+                    <p className="text-stone-500 text-sm italic">Our signature blend - on the house!</p>
+                  </div>
+                  <div className="text-lg font-bold text-primary">₹0</div>
+                </div>
+              </Reveal>
+            )}
           </div>
 
           {/* Cart Summary Header */}
           <div className="lg:col-span-1">
             <Reveal delay={0.2}>
               <div className="bg-stone-50 rounded-3xl p-8 border border-stone-100 sticky top-32">
-                <h2 className="text-2xl font-display font-bold text-stone-800 mb-6">Order Summary</h2>
-                
+                {rewardType && rewardType !== 'BETTER LUCK NEXT TIME' && (
+                  <div className="bg-primary/10 border border-primary/20 rounded-2xl p-4 mb-6 flex items-center gap-3">
+                    <span className="text-xl">🎉</span>
+                    <div>
+                      <p className="text-primary font-black text-sm uppercase tracking-wider">Spin Reward: {rewardType}</p>
+                      {discountMessage && <p className="text-[10px] text-primary/70 font-bold">{discountMessage}</p>}
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between text-stone-600">
                     <span>Subtotal</span>
                     <span className="font-bold">₹{subtotal}</span>
                   </div>
-                  <div className="flex justify-between text-stone-600">
-                    <span>Discount</span>
-                    <span className="text-green-600 font-bold">- ₹{discount}</span>
-                  </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-stone-600">
+                      <span className="flex flex-col">
+                        <span>{discountLabel || 'Discount'}</span>
+                        <span className="text-[10px] text-primary font-bold">Spin Wheel Reward Applied</span>
+                      </span>
+                      <span className="text-green-600 font-bold">- ₹{discount}</span>
+                    </div>
+                  )}
                   <div className="pt-4 border-t border-stone-200 flex justify-between text-xl font-bold text-stone-800">
                     <span>Total</span>
                     <span>₹{total}</span>

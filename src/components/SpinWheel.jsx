@@ -28,16 +28,16 @@ const SpinWheel = () => {
   useEffect(() => {
     const savedReward = localStorage.getItem("spinReward");
     const spinUsed = localStorage.getItem("spinUsed") === "true";
-    const hasSeenPopup = localStorage.getItem("hasSeenSpinPopup") === "true";
+    const isAuthDone = localStorage.getItem("userLoggedIn") === "true" || localStorage.getItem("loginSkipped") === "true";
+    const wheelPlayed = localStorage.getItem("wheelPlayed") === "true";
 
     if (savedReward) setReward(savedReward);
     if (spinUsed) setIsUsed(true);
 
-    if (!spinUsed && !hasSeenPopup) {
+    if (isAuthDone && !wheelPlayed && !spinUsed) {
       setTimeout(() => {
         setIsOpen(true);
-        localStorage.setItem("hasSeenSpinPopup", "true");
-      }, 2000);
+      }, 500); // Quick trigger after login/skip
     }
   }, []);
 
@@ -80,6 +80,7 @@ const SpinWheel = () => {
       setReward(finalReward);
       localStorage.setItem("spinReward", finalReward);
       localStorage.setItem("spinUsed", "true");
+      localStorage.setItem("wheelPlayed", "true");
       
       if (finalReward === "BETTER LUCK NEXT TIME") {
         setMessage("Aww, better luck next time!");
@@ -92,6 +93,7 @@ const SpinWheel = () => {
   const closeModal = () => {
     if (isSpinning) return;
     setIsOpen(false);
+    localStorage.setItem("wheelPlayed", "true");
   };
 
   return (

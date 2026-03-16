@@ -1,28 +1,32 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, ArrowLeft, CheckCircle, CreditCard, Wallet } from 'lucide-react';
+import { CheckCircle, Wallet, ShoppingBag, ArrowLeft, Smartphone, Chrome } from 'lucide-react';
 import Reveal from '../components/Reveal';
 
 const CheckoutPage = () => {
-  const { cart, getCartTotal } = useCart();
   const navigate = useNavigate();
-  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('cod');
+  const { cart, getCartTotal, getDiscountDetails } = useCart();
+  const [isOrdered, setIsOrdered] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('upi');
   const [transactionId, setTransactionId] = useState('');
 
   const subtotal = getCartTotal();
-  const discount = 0;
+  const { amount: discount, label: discountLabel, rewardType } = getDiscountDetails();
   const total = subtotal - discount;
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
-    // In a real app, we would process payment and clear cart here
-    setIsOrderPlaced(true);
+    setIsOrdered(true);
+    // Clear spin rewards after purchase
+    localStorage.removeItem('spinReward');
+    localStorage.removeItem('wheelPlayed');
+    localStorage.removeItem('spinUsed');
+    // In a real app, you would clear the cart here too
     // localStorage.removeItem('cart'); // Should be done in context
   };
 
-  if (isOrderPlaced) {
+  if (isOrdered) {
     return (
       <div className="pt-32 pb-24 min-h-[70vh] flex flex-col items-center justify-center px-4">
         <Reveal className="text-center">
@@ -204,19 +208,33 @@ const CheckoutPage = () => {
                         <span className="font-bold">₹{item.price * item.quantity}</span>
                       </div>
                     ))}
+
+                    {rewardType === 'FREE SAMPLE' && (
+                      <div className="flex justify-between text-sm p-3 bg-primary/5 rounded-xl border border-primary/10 border-dashed">
+                        <span className="text-primary font-bold italic">🍵 Hibiscus Tea Sample (Free)</span>
+                        <span className="font-bold text-primary">₹0</span>
+                      </div>
+                    )}
                     
-                    <div className="pt-4 border-t border-stone-200 space-y-2">
-                      <div className="flex justify-between text-stone-600">
-                        <span>Subtotal</span>
-                        <span className="font-bold">₹{subtotal}</span>
-                      </div>
-                      <div className="flex justify-between text-stone-600">
-                        <span>Discount</span>
-                        <span className="text-green-600 font-bold">- ₹{discount}</span>
-                      </div>
-                      <div className="pt-4 flex justify-between text-xl font-bold text-stone-800">
-                        <span>Total</span>
-                        <span>₹{total}</span>
+                    <div className="pt-4 border-t border-stone-200">
+                      <div className="space-y-4 mb-8">
+                        <div className="flex justify-between text-stone-600">
+                          <span>Subtotal</span>
+                          <span className="font-bold">₹{subtotal}</span>
+                        </div>
+                        {discount > 0 && (
+                          <div className="flex justify-between text-stone-600">
+                            <span className="flex flex-col">
+                              <span>{discountLabel}</span>
+                              <span className="text-[10px] text-primary font-bold tracking-tight">Spin Wheel Reward Applied</span>
+                            </span>
+                            <span className="text-green-600 font-bold">- ₹{discount}</span>
+                          </div>
+                        )}
+                        <div className="pt-4 border-t border-stone-200 flex justify-between text-xl font-bold text-stone-800">
+                          <span>Total Due</span>
+                          <span>₹{total}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
