@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Star, CreditCard, Check } from 'lucide-react';
+import { ShoppingBag, Star, CreditCard, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Reveal from './Reveal';
@@ -46,18 +46,32 @@ const Toast = ({ message, isVisible }) => (
   </AnimatePresence>
 );
 
+const variants = {
+  enter: (direction) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1
+  },
+  exit: (direction) => ({
+    zIndex: 0,
+    x: direction < 0 ? '100%' : '-100%',
+    opacity: 0
+  })
+};
+
 const ProductCard = ({ product, index, onAdd }) => {
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const scrollRef = React.useRef(null);
+  const [[page, direction], setPage] = useState([0, 0]);
+  const activeIndex = Math.abs(page % product.images.length);
+
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, offsetWidth } = scrollRef.current;
-      const index = Math.round(scrollLeft / offsetWidth);
-      setActiveIndex(index);
-    }
+  const paginate = (newDirection) => {
+    setPage([page + newDirection, newDirection]);
   };
 
   const handleAddToCart = () => {
@@ -87,29 +101,62 @@ const ProductCard = ({ product, index, onAdd }) => {
   return (
     <Reveal delay={index * 0.2}>
       <div className="group flex flex-col md:flex-row bg-background rounded-[40px] overflow-hidden border border-border hover:shadow-2xl transition-all duration-500">
-        <div className="w-full md:w-1/2 aspect-square relative group/carousel">
+        <div className="w-full md:w-1/2 aspect-square relative group/carousel overflow-hidden">
           {/* Image Carousel */}
-          <div 
-            ref={scrollRef}
-            onScroll={handleScroll}
-            className="w-full h-full flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-translucent"
-          >
-            {product.images.map((img, i) => (
-              <div key={i} className="w-full h-full flex-shrink-0 snap-center relative">
-                <img
-                  src={img}
-                  alt={`${product.name} - View ${i + 1}`}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-            ))}
+          <div className="relative w-full h-full flex items-center justify-center bg-stone-100">
+            <AnimatePresence initial={false} custom={direction}>
+              <motion.img
+                key={page}
+                src={product.images[activeIndex]}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 }
+                }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={1}
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipe = Math.abs(offset.x) > 50;
+                  if (swipe) {
+                    paginate(offset.x > 0 ? -1 : 1);
+                  }
+                }}
+                className="absolute w-full h-full object-cover cursor-grab active:cursor-grabbing"
+                alt={`${product.name} - View ${activeIndex + 1}`}
+              />
+            </AnimatePresence>
+
+            {/* Navigation Arrows */}
+            <div className="absolute inset-0 flex items-center justify-between px-4 z-20 pointer-events-none">
+              <button
+                onClick={() => paginate(-1)}
+                className="p-2 rounded-full bg-white/80 text-primary hover:bg-white hover:scale-110 transition-all shadow-lg pointer-events-auto opacity-0 group-hover/carousel:opacity-100"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={() => paginate(1)}
+                className="p-2 rounded-full bg-white/80 text-primary hover:bg-white hover:scale-110 transition-all shadow-lg pointer-events-auto opacity-0 group-hover/carousel:opacity-100"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
           </div>
           
           {/* Carousel Indicators */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10 transition-opacity">
             {product.images.map((_, i) => (
-              <div 
+              <button 
                 key={i} 
+                onClick={() => {
+                  const newDirection = i > activeIndex ? 1 : -1;
+                  setPage([i, newDirection]);
+                }}
                 className={`w-2.5 h-2.5 rounded-full border border-black/10 transition-all duration-300 ${
                   activeIndex === i ? 'bg-primary w-5' : 'bg-white/50'
                 }`}
