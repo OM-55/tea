@@ -18,11 +18,11 @@ const SpinWheel = () => {
   ];
 
   const colors = [
-    "#FF1B6B", // Vibrant Pink
-    "#45CAFF", // Electric Blue
-    "#FDC830", // Bright Yellow
-    "#00FF87", // Neon Green
-    "#7117EA", // Deep Purple
+    { start: "#FF1B6B", end: "#FF4593" }, // Pink gradient
+    { start: "#45CAFF", end: "#1971FF" }, // Blue gradient
+    { start: "#FDC830", end: "#FB743E" }, // Orange/Yellow gradient
+    { start: "#00FF87", end: "#60EFFF" }, // Mint/Aqua gradient
+    { start: "#7117EA", end: "#EA07FE" }, // Purple gradient
   ];
 
   useEffect(() => {
@@ -50,6 +50,7 @@ const SpinWheel = () => {
     const randomIndex = Math.floor(Math.random() * segments.length);
     const segmentAngle = 360 / segments.length;
     
+    // Calculate rotation: 10-15 full spins + segment offset
     const extraSpins = (10 + Math.floor(Math.random() * 5)) * 360;
     const finalRotation = rotation + extraSpins + ((segments.length - randomIndex) * segmentAngle);
     
@@ -120,15 +121,23 @@ const SpinWheel = () => {
                        style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
                 </div>
                 
-                {/* The Wheel with Double Border */}
+                {/* The Wheel with Thinner Double Border */}
                 <div 
-                  className="w-full h-full rounded-full p-2 bg-slate-900/40 backdrop-blur-sm border-[6px] border-slate-900 shadow-[0_0_40px_rgba(0,0,0,0.5)] relative"
+                  className="w-full h-full rounded-full p-2 bg-slate-900/40 backdrop-blur-sm border-[3px] border-slate-900 shadow-[0_0_40px_rgba(0,0,0,0.5)] relative"
                 >
                   <div 
-                    className="w-full h-full rounded-full transition-all duration-[4s] cubic-bezier(0.15, 0, 0.15, 1) relative overflow-hidden ring-4 ring-slate-900"
+                    className="w-full h-full rounded-full transition-all duration-[4s] cubic-bezier(0.15, 0, 0.15, 1) relative overflow-hidden ring-2 ring-slate-900"
                     style={{ transform: `rotate(${rotation}deg)` }}
                   >
                     <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                      <defs>
+                        {colors.map((color, i) => (
+                          <linearGradient id={`grad-${i}`} key={i} x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style={{ stopColor: color.start, stopOpacity: 1 }} />
+                            <stop offset="100%" style={{ stopColor: color.end, stopOpacity: 1 }} />
+                          </linearGradient>
+                        ))}
+                      </defs>
                       {segments.map((name, i) => {
                         const angle = 360 / segments.length;
                         const startAngle = i * angle;
@@ -145,7 +154,7 @@ const SpinWheel = () => {
                           <g key={i}>
                             <path 
                               d={pathData} 
-                              fill={colors[i]} 
+                              fill={`url(#grad-${i})`}
                               stroke="rgba(0,0,0,0.3)" 
                               strokeWidth="0.5"
                             />
@@ -153,19 +162,24 @@ const SpinWheel = () => {
                             <line 
                               x1="50" y1="50" x2={x1} y2={y1} 
                               stroke="rgba(0,0,0,0.4)" 
-                              strokeWidth="1.5" 
+                              strokeWidth="1" 
                             />
                             <text
-                              x="75"
+                              x="82"
                               y="50"
                               fill="white"
-                              fontSize="5"
+                              fontSize="5.5"
                               fontWeight="900"
                               textAnchor="middle"
                               alignmentBaseline="middle"
                               transform={`rotate(${startAngle + angle / 2}, 50, 50)`}
                               className="pointer-events-none uppercase tracking-tighter drop-shadow-md italic"
-                              style={{ paintOrder: 'stroke', stroke: 'rgba(0,0,0,0.2)', strokeWidth: '0.2px', fontFamily: '"Cormorant Garamond", serif' }}
+                              style={{ 
+                                paintOrder: 'stroke', 
+                                stroke: 'rgba(0,0,0,0.3)', 
+                                strokeWidth: '0.3px', 
+                                fontFamily: '"Cormorant Garamond", serif' 
+                              }}
                             >
                               {name}
                             </text>
@@ -173,14 +187,14 @@ const SpinWheel = () => {
                         );
                       })}
                       {/* Inner Circular Border line */}
-                      <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1" />
+                      <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />
                     </svg>
                   </div>
 
                   {/* Center Cap / GO Button */}
                   <div className="absolute inset-0 flex items-center justify-center z-20">
                     <div 
-                      className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-900 rounded-full border-[6px] border-slate-700 shadow-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform group"
+                      className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-900 rounded-full border-[4px] border-slate-700 shadow-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform group"
                     >
                       <span className="font-black text-white text-xl sm:text-2xl group-hover:text-accent transition-colors">GO</span>
                     </div>
