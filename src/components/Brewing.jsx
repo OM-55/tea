@@ -43,66 +43,45 @@ const Brewing = () => {
           </p>
         </Reveal>
 
-        <div className="relative max-w-4xl mx-auto mt-12">
+        <div className="relative max-w-5xl mx-auto px-4">
           {/* Desktop Curved Connectors */}
-          <div className="hidden md:block absolute inset-0 -z-10 pointer-events-none" aria-hidden="true">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full opacity-60">
-              {/* Step 1 to 2 */}
+          <div className="hidden md:block absolute top-[32px] left-0 right-0 -z-10 h-0 pointer-events-none" aria-hidden="true">
+            <svg viewBox="0 0 500 40" preserveAspectRatio="none" className="w-full overflow-visible opacity-60">
+              {/* Continuous curved path between 5 steps */}
+              {/* Points approx (based on 5 cols): 50, 150, 250, 350, 450 */}
               <path 
-                d="M 25 10 Q 50 15 75 30" 
-                stroke="#d6cfc7" strokeWidth="0.5" fill="none" 
-              />
-              {/* Step 2 to 3 */}
-              <path 
-                d="M 75 30 Q 50 45 25 50" 
-                stroke="#d6cfc7" strokeWidth="0.5" fill="none" 
-              />
-              {/* Step 3 to 4 */}
-              <path 
-                d="M 25 50 Q 50 65 75 70" 
-                stroke="#d6cfc7" strokeWidth="0.5" fill="none" 
-              />
-              {/* Step 4 to 5 */}
-              <path 
-                d="M 75 70 Q 50 85 25 90" 
-                stroke="#d6cfc7" strokeWidth="0.5" fill="none" 
+                d="M 50 20 Q 100 0 150 20 Q 200 40 250 20 Q 300 0 350 20 Q 400 40 450 20" 
+                stroke="#d6cfc7" 
+                strokeWidth="2" 
+                fill="none" 
               />
             </svg>
           </div>
 
           {/* Mobile Vertical Connector */}
-          <div className="md:hidden absolute left-8 top-12 bottom-12 w-0.5 bg-border -z-10" aria-hidden="true" />
+          <div className="md:hidden absolute left-[31px] top-8 bottom-8 w-0.5 bg-border -z-10" aria-hidden="true" />
 
-          <div className="space-y-16 md:space-y-0 md:h-[1200px] relative">
+          {/* Steps Container */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-4 relative">
             {steps.map((step, index) => (
-              <div 
-                key={step.title}
-                className={`flex flex-col md:flex-row items-center md:absolute md:w-[50%] ${
-                  index % 2 === 0 ? 'md:left-0' : 'md:right-0'
-                }`}
-                style={{ 
-                  top: `${index * 20}%`,
-                  textAlign: 'center'
-                }}
+              <Reveal 
+                key={step.title} 
+                delay={index * 0.1} 
+                className="flex flex-col items-center text-center group"
               >
-                <Reveal 
-                  delay={index * 0.1} 
-                  className="flex flex-col items-center group w-full px-8 py-4"
-                >
-                  <div className="w-16 h-16 rounded-full bg-card border-4 border-background shadow-lg flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 relative z-20">
-                    <span className="absolute -top-2 -right-2 w-6 h-6 bg-accent text-accent-foreground text-xs font-bold rounded-full flex items-center justify-center border-2 border-background">
-                      {index + 1}
-                    </span>
-                    <step.icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-display font-bold text-foreground mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground max-w-xs">
-                    {step.desc}
-                  </p>
-                </Reveal>
-              </div>
+                <div className="w-16 h-16 rounded-full bg-card border-4 border-background shadow-lg flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 relative z-20">
+                  <span className="absolute -top-2 -right-2 w-6 h-6 bg-accent text-accent-foreground text-xs font-bold rounded-full flex items-center justify-center border-2 border-background">
+                    {index + 1}
+                  </span>
+                  <step.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-display font-bold text-foreground mb-3 px-2">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-muted-foreground px-4 leading-relaxed">
+                  {step.desc}
+                </p>
+              </Reveal>
             ))}
           </div>
         </div>
