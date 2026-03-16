@@ -43,20 +43,20 @@ const Brewing = () => {
           </p>
         </Reveal>
 
-        <div className="relative max-w-5xl mx-auto px-4">
-          <div className="hidden md:block absolute top-[32px] left-0 right-0 -z-10 h-20 pointer-events-none" aria-hidden="true">
-            <svg viewBox="0 0 500 40" preserveAspectRatio="none" className="w-full h-full overflow-visible opacity-80">
-              {/* Refined Smooth Wave Path */}
+        <div className="relative max-w-5xl mx-auto px-4 z-0">
+          <div className="hidden md:block absolute top-[32px] left-0 right-0 z-0 h-20 pointer-events-none" aria-hidden="true">
+            <svg viewBox="0 0 500 40" preserveAspectRatio="none" className="w-full h-full overflow-visible opacity-100">
+              {/* Refined Smooth Wave Path - Darker for visibility */}
               <path 
                 id="flow-path"
                 d="M 50 20 Q 100 0 150 20 T 250 20 T 350 20 T 450 20" 
-                stroke="#a8a29e" 
-                strokeWidth="3.5" 
+                stroke="#8b8580" 
+                strokeWidth="4" 
                 fill="none" 
               />
               {/* Subtle Directional Dots along the path */}
               {[100, 200, 300, 400].map((pos) => (
-                <circle key={pos} cx={pos} cy={20} r="3.5" fill="#a8a29e" />
+                <circle key={pos} cx={pos} cy={20} r="4" fill="#8b8580" />
               ))}
             </svg>
           </div>

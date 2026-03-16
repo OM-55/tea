@@ -31,11 +31,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <a href="#" className="flex items-center gap-3 group">
-            <img
-              src="/images/logo.png"
-              alt="PushpRas Logo"
-              className="w-14 h-14 object-contain group-hover:scale-105 transition-transform duration-300 mix-blend-multiply"
-            />
+            <div className="bg-white/10 rounded-xl overflow-hidden mix-blend-multiply">
+              <img
+                src="/images/logo.png"
+                alt="PushpRas Logo"
+                className="w-14 h-14 object-contain group-hover:scale-105 transition-transform duration-300 brightness-110 contrast-150"
+              />
+            </div>
             <span className="font-display text-primary font-extrabold text-[25px]">
               PushpRas
             </span>
