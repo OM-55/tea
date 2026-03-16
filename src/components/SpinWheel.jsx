@@ -123,10 +123,10 @@ const SpinWheel = () => {
                 
                 {/* The Wheel with Thinner Double Border */}
                 <div 
-                  className="w-full h-full rounded-full p-2 bg-slate-900/40 backdrop-blur-sm border-[3px] border-slate-900 shadow-[0_0_40px_rgba(0,0,0,0.5)] relative"
+                  className="w-full h-full rounded-full p-2 bg-slate-900/40 backdrop-blur-sm border-2 border-slate-900 shadow-[0_0_40px_rgba(0,0,0,0.5)] relative"
                 >
                   <div 
-                    className="w-full h-full rounded-full transition-all duration-[4s] cubic-bezier(0.15, 0, 0.15, 1) relative overflow-hidden ring-2 ring-slate-900"
+                    className="w-full h-full rounded-full transition-all duration-[4s] cubic-bezier(0.15, 0, 0.15, 1) relative overflow-hidden ring-1 ring-slate-900"
                     style={{ transform: `rotate(${rotation}deg)` }}
                   >
                     <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
@@ -150,6 +150,11 @@ const SpinWheel = () => {
                         
                         const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 0 1 ${x2} ${y2} Z`;
                         
+                        // Split text for multi-line: split at last space or specific points
+                        const words = name.split(' ');
+                        const lastWord = words.pop();
+                        const firstLine = words.join(' ');
+                        
                         return (
                           <g key={i}>
                             <path 
@@ -162,13 +167,13 @@ const SpinWheel = () => {
                             <line 
                               x1="50" y1="50" x2={x1} y2={y1} 
                               stroke="rgba(0,0,0,0.4)" 
-                              strokeWidth="1" 
+                              strokeWidth="0.5" 
                             />
                             <text
-                              x="82"
+                              x="78"
                               y="50"
                               fill="white"
-                              fontSize="5.5"
+                              fontSize="4.8"
                               fontWeight="900"
                               textAnchor="middle"
                               alignmentBaseline="middle"
@@ -181,20 +186,27 @@ const SpinWheel = () => {
                                 fontFamily: '"Cormorant Garamond", serif' 
                               }}
                             >
-                              {name}
+                              {firstLine ? (
+                                <>
+                                  <tspan x="78" dy="-1.2">{firstLine}</tspan>
+                                  <tspan x="78" dy="5.2">{lastWord}</tspan>
+                                </>
+                              ) : (
+                                <tspan x="78">{name}</tspan>
+                              )}
                             </text>
                           </g>
                         );
                       })}
                       {/* Inner Circular Border line */}
-                      <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />
+                      <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="0.2" />
                     </svg>
                   </div>
 
                   {/* Center Cap / GO Button */}
                   <div className="absolute inset-0 flex items-center justify-center z-20">
                     <div 
-                      className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-900 rounded-full border-[4px] border-slate-700 shadow-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform group"
+                      className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-900 rounded-full border-2 border-slate-700 shadow-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform group"
                     >
                       <span className="font-black text-white text-xl sm:text-2xl group-hover:text-accent transition-colors">GO</span>
                     </div>
