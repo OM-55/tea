@@ -5,19 +5,26 @@ import LoginCard from '../components/Auth/LoginCard';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [isClosing, setIsClosing] = React.useState(false);
 
   const handleAuthSuccess = () => {
-    localStorage.setItem('userLoggedIn', 'true');
-    navigate('/');
+    setIsClosing(true);
+    setTimeout(() => {
+      localStorage.setItem('userLoggedIn', 'true');
+      navigate('/');
+    }, 300);
   };
 
   const handleSkip = () => {
-    localStorage.setItem('loginSkipped', 'true');
-    navigate('/');
+    setIsClosing(true);
+    setTimeout(() => {
+      localStorage.setItem('loginSkipped', 'true');
+      navigate('/');
+    }, 300);
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-white flex flex-col md:flex-row overflow-hidden">
+    <div className={`fixed inset-0 z-[100] bg-white flex flex-col md:flex-row overflow-hidden transition-opacity duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       {/* Left side: Gallery (Hidden on micro screens, stacks on mobile) */}
       <div className="hidden md:block md:w-3/5 lg:w-[65%] border-r border-stone-100">
         <ImageGallery />
@@ -37,3 +44,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+```

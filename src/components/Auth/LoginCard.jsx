@@ -179,9 +179,10 @@ const LoginCard = ({ onLogin, onSkip }) => {
 
         <button 
           onClick={onSkip}
-          className="text-stone-400 text-sm font-medium hover:text-stone-600 transition-colors"
+          className="mt-8 px-8 py-2.5 rounded-full border border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all duration-300 flex items-center justify-center gap-2 group mx-auto text-[15px]"
         >
-          Skip for now → <span className="underline">Go to website</span>
+          Skip for now 
+          <span className="group-hover:translate-x-1 transition-transform">→</span>
         </button>
       </div>
     </Reveal>
