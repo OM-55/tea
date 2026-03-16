@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, User, MessageSquare, Send } from 'lucide-react';
+import { Star, User, MessageSquare, Send, Trash2 } from 'lucide-react';
 import Reveal from './Reveal';
 
 const Reviews = () => {
@@ -37,9 +37,12 @@ const Reviews = () => {
     e.preventDefault();
     if (!formData.name || !formData.text) return;
 
+    const currentUserId = sessionStorage.getItem('currentUser') || 'guest';
+
     const newReview = {
       id: Date.now(),
       ...formData,
+      userId: currentUserId, // Track ownership
       date: new Date().toLocaleDateString()
     };
 
@@ -47,6 +50,12 @@ const Reviews = () => {
     setReviews(updatedReviews);
     localStorage.setItem('product_reviews', JSON.stringify(updatedReviews));
     setFormData({ name: '', rating: 5, text: '' });
+  };
+
+  const handleDelete = (id) => {
+    const updatedReviews = reviews.filter(r => r.id !== id);
+    setReviews(updatedReviews);
+    localStorage.setItem('product_reviews', JSON.stringify(updatedReviews));
   };
 
   return (
@@ -74,15 +83,27 @@ const Reviews = () => {
                     ))}
                   </div>
                   <p className="text-stone-700 italic mb-6 leading-relaxed">"{review.text}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                      <User className="w-5 h-5" />
+                    <div className="flex-grow flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                          <User className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-stone-900">— {review.name}</h4>
+                          <span className="text-xs text-stone-400">{review.date}</span>
+                        </div>
+                      </div>
+
+                      {sessionStorage.getItem('currentUser') === review.userId && (
+                        <button 
+                          onClick={() => handleDelete(review.id)}
+                          className="p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
+                          title="Delete My Review"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
-                    <div>
-                      <h4 className="font-bold text-stone-900">— {review.name}</h4>
-                      <span className="text-xs text-stone-400">{review.date}</span>
-                    </div>
-                  </div>
                 </div>
               </Reveal>
             ))}

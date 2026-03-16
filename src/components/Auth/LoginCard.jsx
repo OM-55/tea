@@ -12,6 +12,9 @@ const LoginCard = ({ onLogin, onSkip }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Simplified session identity for review deletion demo
+    const userIdentifier = phone || 'User_' + Math.floor(Math.random() * 1000);
+    sessionStorage.setItem('currentUser', userIdentifier);
     onLogin();
   };
 
@@ -25,7 +28,7 @@ const LoginCard = ({ onLogin, onSkip }) => {
     <Reveal className="w-full max-w-md p-8 sm:p-12 bg-white rounded-[40px] shadow-2xl shadow-stone-900/10 border border-stone-100">
       <div className="text-center mb-10">
         <h1 className="text-4xl font-display font-bold text-stone-900 mb-2">
-          {isSignup ? 'Create Account' : 'Welcome Back'}
+          {isSignup ? 'Create Account' : 'Welcome'}
         </h1>
         <p className="text-stone-500">
           {isSignup ? 'Join PushpRas for exclusive blends' : 'Login to your wellness journey'}

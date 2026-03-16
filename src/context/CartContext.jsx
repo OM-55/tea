@@ -20,6 +20,25 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
+  // Handle Free Sample Reward Injection
+  useEffect(() => {
+    const reward = localStorage.getItem('spinReward');
+    if (reward === 'FREE SAMPLE') {
+      const hasSample = cart.some(item => item.id === 'reward-sample');
+      if (!hasSample) {
+        const sampleItem = {
+          id: 'reward-sample',
+          name: 'Hibiscus Tea Sample',
+          price: 0,
+          weight: '10g Sachet',
+          image: 'https://images.unsplash.com/photo-1544467328-94fd012165e8?auto=format&fit=crop&q=80&w=200', // Place holder for variety
+          isRewardItem: true
+        };
+        setCart(prev => [...prev, { ...sampleItem, quantity: 1 }]);
+      }
+    }
+  }, []); // Only check on mount to avoid nagging if user removes it
+
   const addToCart = (product) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);

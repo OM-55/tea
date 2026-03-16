@@ -42,40 +42,47 @@ const CartPage = () => {
           {/* Cart Items List */}
           <div className="lg:col-span-2 space-y-8">
             {cart.map((item) => (
-              // ... existing mapping ...
               <Reveal key={item.id}>
-                {/* ... existing item div ... */}
-                <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-stone-50 rounded-3xl border border-stone-100">
-                  <div className="w-24 h-24 bg-white rounded-2xl overflow-hidden flex-shrink-0 shadow-sm">
+                <div className={`flex flex-col sm:flex-row items-center gap-6 p-6 rounded-3xl border transition-all ${item.id === 'reward-sample' ? 'bg-primary/5 border-primary/20 border-dashed' : 'bg-stone-50 border-stone-100'}`}>
+                  <div className="w-24 h-24 bg-white rounded-2xl overflow-hidden flex-shrink-0 shadow-sm flex items-center justify-center">
                     <img 
                       src={item.image} 
                       alt={item.name} 
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover ${item.id === 'reward-sample' ? 'opacity-50' : ''}`}
                     />
                   </div>
                   
                   <div className="flex-grow text-center sm:text-left">
+                    {item.id === 'reward-sample' && (
+                      <div className="inline-block px-2 py-1 bg-primary text-white text-[10px] font-black rounded-md mb-2 uppercase tracking-tighter">SPIN WHEEL REWARD</div>
+                    )}
                     <h3 className="text-lg font-bold text-stone-800 mb-1">{item.name}</h3>
                     <p className="text-stone-500 text-sm mb-4">{item.weight}</p>
                     
                     <div className="flex items-center justify-center sm:justify-start gap-12">
-                      <div className="flex items-center bg-white border border-stone-200 rounded-full px-2 py-1">
-                        <button 
-                          onClick={() => updateQuantity(item.id, -1)}
-                          className="p-1 hover:text-primary transition-colors"
-                        >
-                          <Minus className="w-4 h-4" />
-                        </button>
-                        <span className="w-8 text-center font-bold text-stone-700">{item.quantity}</span>
-                        <button 
-                          onClick={() => updateQuantity(item.id, 1)}
-                          className="p-1 hover:text-primary transition-colors"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
-                      </div>
+                      {item.id === 'reward-sample' ? (
+                        <div className="px-3 py-1 bg-white border border-primary/20 rounded-full text-[10px] font-bold text-primary italic">
+                          1× Free Gift
+                        </div>
+                      ) : (
+                        <div className="flex items-center bg-white border border-stone-200 rounded-full px-2 py-1">
+                          <button 
+                            onClick={() => updateQuantity(item.id, -1)}
+                            className="p-1 hover:text-primary transition-colors"
+                          >
+                            <Minus className="w-4 h-4" />
+                          </button>
+                          <span className="w-8 text-center font-bold text-stone-700">{item.quantity}</span>
+                          <button 
+                            onClick={() => updateQuantity(item.id, 1)}
+                            className="p-1 hover:text-primary transition-colors"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
                       
-                      <div className="text-lg font-bold text-stone-800">
+                      <div className={`text-lg font-bold ${item.id === 'reward-sample' ? 'text-primary' : 'text-stone-800'}`}>
                         ₹{item.price * item.quantity}
                       </div>
                     </div>
@@ -91,21 +98,7 @@ const CartPage = () => {
               </Reveal>
             ))}
 
-            {rewardType === 'FREE SAMPLE' && (
-              <Reveal>
-                <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-primary/5 rounded-3xl border border-primary/20 border-dashed">
-                  <div className="w-24 h-24 bg-white rounded-2xl overflow-hidden flex-shrink-0 shadow-sm flex items-center justify-center">
-                    <ShoppingBag className="w-10 h-10 text-primary opacity-40" />
-                  </div>
-                  <div className="flex-grow text-center sm:text-left">
-                    <div className="inline-block px-2 py-1 bg-primary text-white text-[10px] font-black rounded-md mb-2 uppercase tracking-tighter">FREE REWARD</div>
-                    <h3 className="text-lg font-bold text-stone-800 mb-1">Hibiscus Tea Sample</h3>
-                    <p className="text-stone-500 text-sm italic">Our signature blend - on the house!</p>
-                  </div>
-                  <div className="text-lg font-bold text-primary">₹0</div>
-                </div>
-              </Reveal>
-            )}
+            {/* Manual block removed as it is now handled by automated injection in CartContext */}
           </div>
 
           {/* Cart Summary Header */}
