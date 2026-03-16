@@ -18,12 +18,12 @@ const ingredients = [
     color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
   },
   {
-    image: "/C:/Users/user1/.gemini/antigravity/brain/d4430264-2214-4dec-a613-90728bc154ae/cardamom_natural_1773686547855.png",
+    emoji: "💠",
     name: "Cardamom",
     color: "bg-accent/20 text-accent-foreground"
   },
   {
-    image: "/C:/Users/user1/.gemini/antigravity/brain/d4430264-2214-4dec-a613-90728bc154ae/clove_natural_1773686727908.png",
+    emoji: "🍂",
     name: "Clove",
     color: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-500"
   }
